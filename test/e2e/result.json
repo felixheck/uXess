@@ -1,0 +1,22 @@
+[
+  {
+    "description": "should have a title",
+    "assertions": [
+      {
+        "passed": true
+      }
+    ],
+    "duration": 1821
+  },
+  {
+    "description": "should add one and two",
+    "assertions": [
+      {
+        "passed": false,
+        "errorMsg": "Expected '3' to equal '5'.",
+        "stackTrace": "Error: Failed expectation\n    at Object.<anonymous> (/Users/felix/Base/Thesis/Code/uxess/test/e2e/index.spec.js:16:53)\n    at /Users/felix/Base/Thesis/Code/uxess/node_modules/protractor/node_modules/jasminewd2/index.js:96:23\n    at new promise.Promise (/Users/felix/Base/Thesis/Code/uxess/node_modules/protractor/node_modules/selenium-webdriver/lib/goog/../webdriver/promise.js:368:5)\n    at controlFlowExecute (/Users/felix/Base/Thesis/Code/uxess/node_modules/protractor/node_modules/jasminewd2/index.js:82:18)\n    at [object Object].promise.ControlFlow.runInFrame_ (/Users/felix/Base/Thesis/Code/uxess/node_modules/protractor/node_modules/selenium-webdriver/lib/goog/../webdriver/promise.js:1857:20)\n    at [object Object].promise.ControlFlow.runEventLoop_ (/Users/felix/Base/Thesis/Code/uxess/node_modules/protractor/node_modules/selenium-webdriver/lib/goog/../webdriver/promise.js:1729:8)\n    at [object Object].eval (/Users/felix/Base/Thesis/Code/uxess/node_modules/protractor/node_modules/selenium-webdriver/lib/goog/../webdriver/promise.js:2043:12)\n    at goog.async.run.processWorkQueue (/Users/felix/Base/Thesis/Code/uxess/node_modules/protractor/node_modules/selenium-webdriver/lib/goog/async/run.js:130:15)\n    at runMicrotasksCallback (node.js:337:7)"
+      }
+    ],
+    "duration": 6852
+  }
+]
