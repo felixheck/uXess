@@ -4,7 +4,7 @@ describe('uxess', function() {
   describe('dependencies', function() {
     it('should have cached templates', inject(function($templateCache) {
       expect($templateCache).toBeDefined();
-      expect($templateCache.info().size).not.toBe(0);
+      expect($templateCache.info().size).not.toBe(1);
     }));
   });
 });

@@ -9,8 +9,10 @@
 
   'use strict';
 
-  angular.module('uxess', [
-    'templates'
+	angular.module('uxess').constant('accessTypes', [
+    'all',
+    'any',
+    'none'
   ]);
 
 })();
