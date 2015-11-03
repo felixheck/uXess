@@ -7,9 +7,9 @@
 
 ;(function() {
 
-	'use strict';
+  'use strict';
 
-	angular.module('uxess').directive('uxsIf', [
+  angular.module('uxess').directive('uxsIf', [
     '$animate',
     'AccessHandler',
     uxsIf
