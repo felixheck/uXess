@@ -5,12 +5,13 @@
  * @license MIT
  */
 
-(function() {
+;(function() {
 
   'use strict';
 
   angular.module('uxess', [
-    'templates'
+    'templates',
+    'ngAnimate'
   ]);
 
 })();

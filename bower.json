@@ -1,0 +1,28 @@
+{
+  "name": "uxess",
+  "description": "Client-side authorization middleware to handle ui element based on permissions",
+  "keywords": [],
+  "author": {
+    "name": "Felix Heck",
+    "email": "hi@whoTheHeck.de",
+    "homepage": "http://whoTheHeck.de"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/felixheck/uXess.git"
+  },
+  "homepage": "https://github.com/felixheck/uXess",
+  "license": "MIT",
+  "main": "./src/uxess.js",
+  "moduleType": [],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test"
+  ],
+  "dependencies": {
+    "angular-animate": "~1.4.7",
+    "angular": "~1.4.7"
+  }
+}

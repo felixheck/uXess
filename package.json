@@ -2,19 +2,6 @@
   "name": "uxess",
   "version": "0.0.1",
   "description": "Client-side authorization middleware to handle ui element based on permissions",
-  "main": "./src/uxess.js",
-  "scripts": {
-    "start": "npm run watch",
-    "test": "karma start ./config/karma.conf.js",
-    "test:e2e": "npm run protractor --force",
-    "build": "npm run build:dist && npm run build:cache",
-    "build:dist": "node config/buildify.conf.js dist:build",
-    "build:cache": "npm-html2js -i 'src/partials/**/*.tpl.html' -o 'src/templates.js' -m 'templates' -b 'src/partials'",
-    "watch": "gacher -p 'src/**/*.js' -c 'npm run build:dist'",
-    "cover": "opn test/coverage/index.html --no-wait -- 'google chrome'",
-    "protractor": "node_modules/.bin/protractor config/protractor.conf.js",
-    "selenium": "node_modules/.bin/webdriver-manager start"
-  },
   "keywords": [],
   "author": {
     "name": "Felix Heck",
@@ -26,12 +13,29 @@
     "url": "https://github.com/felixheck/uXess.git"
   },
   "bugs": {
-    "url": "https://github.com/felixheck/uXess/issues",
-    "email": "hi@whoTheHeck.com"
+    "email": "hi@whoTheHeck.com",
+    "url": "https://github.com/felixheck/uXess/issues"
   },
   "license": "MIT",
+  "main": "./src/uxess.js",
+  "scripts": {
+    "start": "npm run watch:dist",
+    "test": "npm run test:unit",
+    "serve": "npm run selenium",
+    "bower": "node_modules/.bin/bower install",
+    "cover": "opn test/coverage/index.html --no-wait -- 'google chrome'",
+    "test:unit": "karma start ./config/karma.conf.js",
+    "test:e2e": "npm run protractor --force",
+    "build": "npm run build:dist && npm run build:cache",
+    "build:dist": "node config/buildify.conf.js dist:build",
+    "build:cache": "npm-html2js -i 'src/partials/**/*.tpl.html' -o 'src/templates.js' -m 'templates' -b 'src/partials'",
+    "watch:dist": "gacher -p 'src/**/*.js' -c 'npm run build:dist'",
+    "protractor": "node_modules/.bin/protractor config/protractor.conf.js",
+    "selenium": "node_modules/.bin/webdriver-manager start"
+  },
   "devDependencies": {
     "angular-mocks": "^1.4.7",
+    "bower": "^1.6.5",
     "buildify": "^0.4.0",
     "gacher": "^1.1.3",
     "istanbul": "^0.4.0",

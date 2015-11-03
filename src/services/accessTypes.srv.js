@@ -5,14 +5,14 @@
  * @license MIT
  */
 
-(function() {
+;(function() {
 
   'use strict';
 
-	angular.module('uxess').constant('accessTypes', [
-    'all',
-    'any',
-    'none'
-  ]);
+	angular.module('uxess').constant('ACCESS_TYPES', {
+    'any': 'hasAnyPermits',
+    'all': 'hasPermits',
+    'none': 'hasNonePermits'
+  });
 
 })();

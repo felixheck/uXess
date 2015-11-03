@@ -5,11 +5,15 @@
  * @license MIT
  */
 
-(function() {
+;(function() {
 
   'use strict';
 
-	angular.module('uxess').factory('accessHandler', accessHandler);
+	angular.module('uxess').service('AccessHandler', [
+    'ACCESS_TYPES',
+    'PermitHandler',
+    AccessHandler
+  ]);
 
   /**
    * @function
@@ -18,17 +22,88 @@
    * @description
    * Handle access to UI based on permits
    *
-   * @param {Array.<string>} accessTypes Available access types (DI)
-   * @param {Object.<Function>} permitHandler Factory for handle permits (DI)
-   * @returns {Object.<Function>} Grant access to defined private scope
+   * @param {Object.<string>} ACCESS_TYPES Available access types (DI)
+   * @param {Object} PermitHandler Factory to handle permits (DI)
    */
-  function accessHandler(accessTypes, permitHandler) {
+  function AccessHandler(ACCESS_TYPES, PermitHandler) {
 
     /**
      * @type {Object}
-     * @public
+     * @private
+     *
+     * @description
+     * Store private variables in a centrally manner
      */
-    var accessHandler = {};
+    var data = {
+      defaultAccessType:'any'
+    };
+
+    /**
+     * @function
+     * @public
+     *
+     * @description
+     * Set the default access type
+     *
+     * @param {string} accessType Access type to be set
+     */
+    this.setDefaultAccessType = function setDefaultAccessType(accessType) {
+      var isVerified = this.verifyAccessType(accessType);
+      var parsedAccessType = parseAccessType(accessType);
+
+      if(isVerified) {
+        data.defaultAccessType = parsedAccessType;
+      }
+    };
+
+    /**
+     * @function
+     * @public
+     *
+     * @description
+     * Get the default access type
+     *
+     * @returns {string} `defaultAccessType`
+     */
+    this.getDefaultAccessType = function getDefaultAccessType() {
+      return data.defaultAccessType;
+    };
+
+    /**
+     * @function
+     * @public
+     *
+     * @description
+     * Check whether passed access type is valid
+     *
+     * @param {string} accessType Access type to be checked
+     * @returns {boolean} Access type is valid
+     */
+    this.verifyAccessType = function verifyAccessType(accessType) {
+      var parsedAccessType = parseAccessType(accessType);
+      var accessTypeKeys = Object.keys(ACCESS_TYPES);
+
+      return accessTypeKeys.indexOf(parsedAccessType) !== -1
+    };
+
+    /**
+     * @function
+     * @public
+     *
+     * @description
+     * Check whether UI element is accessible for user
+     *
+     * @param {(Array.<?string> | string)} permits Permits to be searched for
+     * @param {string} accessType Required access type
+     * @returns {boolean} UI element is accessible
+     */
+    this.isAccessible = function isAccessible(permits, accessType) {
+      var isVerified = this.verifyAccessType(accessType);
+      var parsedAccessType = parseAccessType(accessType);
+      var permitTesterName = ACCESS_TYPES[parsedAccessType];
+
+      return isVerified && PermitHandler[permitTesterName](permits);
+    };
 
     /**
      * @function
@@ -41,30 +116,14 @@
      * @returns {string} Parsed access type
      */
     function parseAccessType(accessType) {
-      var trimmedAccessType;
+      var parsedAccessType = data.defaultAccessType;
 
-      if(!angular.isString(accessType)) return '';
+      if(angular.isString(accessType)) {
+        parsedAccessType = angular.lowercase(accessType).trim();
+      }
 
-      trimmedAccessType = accessType.trim();
-      return angular.lowercase(trimmedAccessType);
+      return parsedAccessType;
     }
-
-    /**
-     * @function
-     * @public
-     *
-     * @description
-     * Check whether passed access type is valid
-     *
-     * @param {string} accessType Access type to be checked
-     * @returns {boolean} Access type is valid
-     */
-    accessHandler.verifyAccessType = function verifyAccessType(accessType) {
-      var parsedAccessType = parseAccessType(accessType);
-      return accessTypes.indexOf(parsedAccessType) !== -1
-    };
-
-    return accessHandler;
   }
 
 })();
