@@ -100,9 +100,9 @@
     this.isAccessible = function isAccessible(permits, accessType) {
       var isVerified = this.verifyAccessType(accessType);
       var parsedAccessType = parseAccessType(accessType);
-      var permitTesterName = ACCESS_TYPES[parsedAccessType];
+      var permitInspector = ACCESS_TYPES[parsedAccessType];
 
-      return isVerified && PermitHandler[permitTesterName](permits);
+      return isVerified && PermitHandler[permitInspector](permits);
     };
 
     /**

@@ -94,6 +94,23 @@
      * @public
      *
      * @description
+     * Add permits to `data.permits`
+     *
+     * @fires `uxsPermitsChanged`
+     *
+     * @param {(Array.<?string> | string)} permits Permissions to be added
+     */
+    this.addPermits = function addPermits(permits) {
+      var parsedPermits = this.parsePermits(permits);
+      Array.prototype.push.apply(data.permits, parsedPermits);
+      $rootScope.$broadcast('uxsPermitsChanged');
+    };
+
+    /**
+     * @function
+     * @public
+     *
+     * @description
      * Check whether all passed permits are included in `data.permits`
      *
      * @param {(Array.<?string> | string)} permits Permits to be searched for

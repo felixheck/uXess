@@ -5,17 +5,23 @@
  * @license MIT
  */
 
-(function() {
+;(function() {
 
   'use strict';
 
   angular.module('uxess', [
-    'templates'
-  ]);
+    'templates']);
 
 })();
 angular.module('templates', [])
-  .run(['$templateCache', function($templateCache) {}]);
+  .run(['$templateCache', function($templateCache) {
+    $templateCache.put('demo.tpl.html',
+    '<h1>Demo Partial</h1>');
+  $templateCache.put('demo2.tpl.html',
+    '<h1>Demo Partial</h1>');
+
+  }]);
+
 /*!
  * @author Felix Heck <hi@whoTheHeck.de>
  * @version 0.0.1
@@ -23,11 +29,15 @@ angular.module('templates', [])
  * @license MIT
  */
 
-(function() {
+;(function() {
 
   'use strict';
 
-	angular.module('uxess').factory('accessHandler', accessHandler);
+	angular.module('uxess').service('AccessHandler', [
+    'ACCESS_TYPES',
+    'PermitHandler',
+    AccessHandler
+  ]);
 
   /**
    * @function
@@ -37,39 +47,36 @@ angular.module('templates', [])
    * Handle access to UI based on permits
    *
    * @param {Object.<string>} ACCESS_TYPES Available access types (DI)
-   * @param {Object.<Function>} permitHandler Factory for handle permits (DI)
-   * @returns {Object.<Function>} Grant access to defined private scope
+   * @param {Object} PermitHandler Factory to handle permits (DI)
    */
-  function accessHandler(ACCESS_TYPES, permitHandler) {
+  function AccessHandler(ACCESS_TYPES, PermitHandler) {
 
     /**
      * @type {Object}
-     * @public
-     */
-    var accessHandler = {};
-
-    /**
-     * @type {string}
      * @private
+     *
+     * @description
+     * Store private variables in a centrally manner
      */
-    var defaultAccessType = 'any';
+    var data = {
+      defaultAccessType:'any'
+    };
 
     /**
      * @function
      * @public
-     * @this accessHandler
      *
      * @description
      * Set the default access type
      *
      * @param {string} accessType Access type to be set
      */
-    accessHandler.setDefaultAccessType = function setDefaultAccessType(accessType) {
+    this.setDefaultAccessType = function setDefaultAccessType(accessType) {
       var isVerified = this.verifyAccessType(accessType);
       var parsedAccessType = parseAccessType(accessType);
 
       if(isVerified) {
-        defaultAccessType = parsedAccessType;
+        data.defaultAccessType = parsedAccessType;
       }
     };
 
@@ -82,8 +89,8 @@ angular.module('templates', [])
      *
      * @returns {string} `defaultAccessType`
      */
-    accessHandler.getDefaultAccessType = function getDefaultAccessType() {
-      return defaultAccessType;
+    this.getDefaultAccessType = function getDefaultAccessType() {
+      return data.defaultAccessType;
     };
 
     /**
@@ -96,7 +103,7 @@ angular.module('templates', [])
      * @param {string} accessType Access type to be checked
      * @returns {boolean} Access type is valid
      */
-    accessHandler.verifyAccessType = function verifyAccessType(accessType) {
+    this.verifyAccessType = function verifyAccessType(accessType) {
       var parsedAccessType = parseAccessType(accessType);
       var accessTypeKeys = Object.keys(ACCESS_TYPES);
 
@@ -106,7 +113,6 @@ angular.module('templates', [])
     /**
      * @function
      * @public
-     * @this accessHandler
      *
      * @description
      * Check whether UI element is accessible for user
@@ -115,12 +121,12 @@ angular.module('templates', [])
      * @param {string} accessType Required access type
      * @returns {boolean} UI element is accessible
      */
-    accessHandler.isAccessible = function isAccessible(permits, accessType) {
+    this.isAccessible = function isAccessible(permits, accessType) {
       var isVerified = this.verifyAccessType(accessType);
       var parsedAccessType = parseAccessType(accessType);
-      var permitTesterName = ACCESS_TYPES[parsedAccessType];
+      var permitInspector = ACCESS_TYPES[parsedAccessType];
 
-      return isVerified && permitHandler[permitTesterName](permits);
+      return isVerified && PermitHandler[permitInspector](permits);
     };
 
     /**
@@ -134,7 +140,7 @@ angular.module('templates', [])
      * @returns {string} Parsed access type
      */
     function parseAccessType(accessType) {
-      var parsedAccessType = defaultAccessType;
+      var parsedAccessType = data.defaultAccessType;
 
       if(angular.isString(accessType)) {
         parsedAccessType = angular.lowercase(accessType).trim();
@@ -142,8 +148,6 @@ angular.module('templates', [])
 
       return parsedAccessType;
     }
-
-    return accessHandler;
   }
 
 })();
@@ -154,7 +158,7 @@ angular.module('templates', [])
  * @license MIT
  */
 
-(function() {
+;(function() {
 
   'use strict';
 
@@ -172,11 +176,14 @@ angular.module('templates', [])
  * @license MIT
  */
 
-(function() {
+;(function() {
 
   'use strict';
 
-	angular.module('uxess').factory('permitHandler', permitHandler);
+	angular.module('uxess').service('PermitHandler', [
+    '$rootScope',
+    PermitHandler
+  ]);
 
   /**
    * @function
@@ -185,19 +192,16 @@ angular.module('templates', [])
    * @description
    * Handle permits and share data
    *
-   * @returns {Object.<Function>} Grant access to defined private scope
+   * @param {Object} $rootScope Access to root scope (DI)
    */
-  function permitHandler() {
-
-    /**
-     * @type {Object}
-     * @public
-     */
-    var permitHandler = {};
+  function PermitHandler($rootScope) {
 
     /**
      * @type {Object}
      * @private
+     *
+     * @description
+     * Store private variables in a centrally manner
      */
     var data = {
       permits: []
@@ -206,21 +210,21 @@ angular.module('templates', [])
     /**
      * @function
      * @public
-     * 
+     *
      * @description
      * Parse permits to list of trimmed and transformed ones
      *
      * @param {(Array.<?string> | string)} permits Permits to be parsed
      * @returns {Array.<?string>} List of permits
      */
-    permitHandler.parsePermits = function parsePermits(permits) {
+    this.parsePermits = function parsePermits(permits) {
       var parsedPermits = [];
 
       if(permits && angular.isString(permits)) {
         permits = permits.split(',');
       }
 
-      if(permits && permits.length) {
+      if(permits && angular.isArray(permits)) {
         parsedPermits = parsePermitList(permits);
       }
 
@@ -236,28 +240,46 @@ angular.module('templates', [])
      *
      * @returns {Array.<?string>} `data.permits`
      */
-    permitHandler.getPermits = function getPermits() {
+    this.getPermits = function getPermits() {
       return data.permits;
     };
 
     /**
      * @function
      * @public
-     * @this permitHandler
      *
      * @description
      * Set `data.permits`
      *
+     * @fires `uxsPermitsChanged`
+     *
      * @param {(Array.<?string> | string)} permits Permissions to be set
      */
-    permitHandler.setPermits = function setPermits(permits) {
+    this.setPermits = function setPermits(permits) {
       data.permits = this.parsePermits(permits);
+      $rootScope.$broadcast('uxsPermitsChanged');
     };
 
     /**
      * @function
      * @public
-     * @this permitHandler
+     *
+     * @description
+     * Add permits to `data.permits`
+     *
+     * @fires `uxsPermitsChanged`
+     *
+     * @param {(Array.<?string> | string)} permits Permissions to be added
+     */
+    this.addPermits = function addPermits(permits) {
+      var parsedPermits = this.parsePermits(permits);
+      Array.prototype.push.apply(data.permits, parsedPermits);
+      $rootScope.$broadcast('uxsPermitsChanged');
+    };
+
+    /**
+     * @function
+     * @public
      *
      * @description
      * Check whether all passed permits are included in `data.permits`
@@ -265,7 +287,7 @@ angular.module('templates', [])
      * @param {(Array.<?string> | string)} permits Permits to be searched for
      * @returns {boolean} All passed permits are set
      */
-    permitHandler.hasPermits = function hasPermits(permits) {
+    this.hasPermits = function hasPermits(permits) {
       var parsedPermits = this.parsePermits(permits);
 
       return parsedPermits.every(inspectPermits);
@@ -274,7 +296,6 @@ angular.module('templates', [])
     /**
      * @function
      * @public
-     * @this permitHandler
      *
      * @description
      * Check whether any of passed permits is included in `data.permits`
@@ -282,7 +303,7 @@ angular.module('templates', [])
      * @param {(Array.<?string> | string)} permits Permits to be searched for
      * @returns {boolean} Any of passed permits is set
      */
-    permitHandler.hasAnyPermits = function hasAnyPermits(permits) {
+    this.hasAnyPermits = function hasAnyPermits(permits) {
       var parsedPermits = this.parsePermits(permits);
 
       return parsedPermits.some(inspectPermits);
@@ -291,7 +312,6 @@ angular.module('templates', [])
     /**
      * @function
      * @public
-     * @this permitHandler
      *
      * @description
      * Check whether none of passed permits is included in `data.permits`
@@ -299,7 +319,7 @@ angular.module('templates', [])
      * @param {(Array.<?string> | string)} permits Permits to be searched for
      * @returns {boolean} None of passed permits is set
      */
-    permitHandler.hasNonePermits = function hasNonePermits(permits) {
+    this.hasNonePermits = function hasNonePermits(permits) {
       return !this.hasAnyPermits(permits);
     };
 
@@ -332,8 +352,76 @@ angular.module('templates', [])
         return angular.lowercase(permit).trim();
       });
     }
+  }
 
-    return permitHandler;
+})();
+/*!
+ * @author Felix Heck <hi@whoTheHeck.de>
+ * @version 0.0.1
+ * @copyright Felix Heck 2015
+ * @license MIT
+ */
+
+;(function() {
+
+  'use strict';
+
+  angular.module('uxess').directive('uxsIf', [
+    '$animate',
+    'AccessHandler',
+    uxsIf
+  ]);
+
+
+  /**
+   * @function
+   * @public
+   *
+   * @description
+   * Handle UI elements based on permits
+   *
+   * @param {Object} $animate Service to animate UI elements (DI)
+   * @param {Object} AccessHandler Factory to handle access (DI)
+   * @returns {Object} Grant access to private scope
+   */
+  function uxsIf($animate, AccessHandler) {
+
+    /**
+     * @function
+     * @public
+     *
+     * @description
+     * Handle DOM manipulation
+     *
+     * @listens `uxsPermitsChanged`
+     *
+     * @param {Object} scope Scope to be used for registering event handler
+     * @param {Object} element The element where the directive is to be used
+     * @param {Array.<?string>} attr List of attributes declared on this element
+     * @param {Function} ctrl Directive's required controller instance
+     * @param {Function} transclude Transclude linking function
+     */
+    function link(scope, element, attr, ctrl, transclude) {
+      var isAccessible = AccessHandler.isAccessible(attrs.uxsIf, attrs.uxsType);
+
+      if(isAccessible) {
+        $animate.enter();
+      } else {
+        $animate.leave();
+      }
+
+      angular.noop();
+      scope.$on('uxsPermitsChanged', angular.noop);
+    }
+
+    return {
+      multiElement: true,
+      transclude: 'element',
+      priority: 500,
+      terminal: true,
+      restrict: 'A',
+      link: link
+    };
   }
 
 })();

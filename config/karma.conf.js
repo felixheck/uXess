@@ -7,8 +7,8 @@
       basePath: '../',
       frameworks: ['jasmine'],
       files: [
-        'bower_components/angular/angular.min.js',
-        'bower_components/angular-animate/angular-animate.min.js',
+        'node_modules/angular/angular.min.js',
+        'node_modules/angular-animate/angular-animate.min.js',
         'node_modules/angular-mocks/angular-mocks.js',
         'src/index.js',
         'src/**/*.js',

@@ -10,8 +10,6 @@
   'use strict';
 
   angular.module('uxess', [
-    'templates',
-    'ngAnimate'
-  ]);
+    'templates']);
 
 })();

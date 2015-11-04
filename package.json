@@ -22,11 +22,10 @@
     "start": "npm run watch:dist",
     "test": "npm run test:unit",
     "serve": "npm run selenium",
-    "bower": "node_modules/.bin/bower install",
     "cover": "opn test/coverage/index.html --no-wait -- 'google chrome'",
     "test:unit": "karma start ./config/karma.conf.js",
     "test:e2e": "npm run protractor --force",
-    "build": "npm run build:dist && npm run build:cache",
+    "build": "npm run build:cache && npm run build:dist",
     "build:dist": "node config/buildify.conf.js dist:build",
     "build:cache": "npm-html2js -i 'src/partials/**/*.tpl.html' -o 'src/templates.js' -m 'templates' -b 'src/partials'",
     "watch:dist": "gacher -p 'src/**/*.js' -c 'npm run build:dist'",
@@ -35,7 +34,6 @@
   },
   "devDependencies": {
     "angular-mocks": "^1.4.7",
-    "bower": "^1.6.5",
     "buildify": "^0.4.0",
     "gacher": "^1.1.3",
     "istanbul": "^0.4.0",
@@ -51,7 +49,10 @@
     "phantomjs": "^1.9.18",
     "protractor": "^2.5.1"
   },
-  "dependencies": {},
+  "dependencies": {
+    "angular": "^1.4.7",
+    "angular-animate": "^1.4.7"
+  },
   "engines": {
     "node": "0.12.7",
     "npm": "^2.11.3"

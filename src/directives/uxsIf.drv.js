@@ -60,7 +60,7 @@
     return {
       multiElement: true,
       transclude: 'element',
-      priority: 600,
+      priority: 500,
       terminal: true,
       restrict: 'A',
       link: link
