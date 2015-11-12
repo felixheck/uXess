@@ -11,7 +11,6 @@
 
 	angular.module('uxess').service('AccessHandler', [
     'ACCESS_TYPES',
-    'PermitHandler',
     AccessHandler
   ]);
 
@@ -23,9 +22,8 @@
    * Handle access to UI based on permits
    *
    * @param {Object.<string>} ACCESS_TYPES Available access types (DI)
-   * @param {Object} PermitHandler Factory to handle permits (DI)
    */
-  function AccessHandler(ACCESS_TYPES, PermitHandler) {
+  function AccessHandler(ACCESS_TYPES) {
 
     /**
      * @type {Object}
@@ -49,7 +47,7 @@
      */
     this.setDefaultAccessType = function setDefaultAccessType(accessType) {
       var isVerified = this.verifyAccessType(accessType);
-      var parsedAccessType = parseAccessType(accessType);
+      var parsedAccessType = this.parseAccessType(accessType);
 
       if(isVerified) {
         data.defaultAccessType = parsedAccessType;
@@ -80,7 +78,7 @@
      * @returns {boolean} Access type is valid
      */
     this.verifyAccessType = function verifyAccessType(accessType) {
-      var parsedAccessType = parseAccessType(accessType);
+      var parsedAccessType = this.parseAccessType(accessType);
       var accessTypeKeys = Object.keys(ACCESS_TYPES);
 
       return accessTypeKeys.indexOf(parsedAccessType) !== -1
@@ -91,31 +89,12 @@
      * @public
      *
      * @description
-     * Check whether UI element is accessible for user
-     *
-     * @param {(Array.<?string> | string)} permits Permits to be searched for
-     * @param {string} accessType Required access type
-     * @returns {boolean} UI element is accessible
-     */
-    this.isAccessible = function isAccessible(permits, accessType) {
-      var isVerified = this.verifyAccessType(accessType);
-      var parsedAccessType = parseAccessType(accessType);
-      var permitInspector = ACCESS_TYPES[parsedAccessType];
-
-      return isVerified && PermitHandler[permitInspector](permits);
-    };
-
-    /**
-     * @function
-     * @private
-     *
-     * @description
      * Parse passed access type
      *
      * @param {string} accessType Access type to be parsed
      * @returns {string} Parsed access type
      */
-    function parseAccessType(accessType) {
+    this.parseAccessType = function parseAccessType(accessType) {
       var parsedAccessType = data.defaultAccessType;
 
       if(angular.isString(accessType)) {

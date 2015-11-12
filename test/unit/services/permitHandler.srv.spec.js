@@ -117,4 +117,16 @@ describe('uxess.permitHandler', function() {
       expect(_PermitHandler.hasNonePermits(['user'])).toBe(true);
     });
   });
+
+  describe('isPermitted', function() {
+    it('should be permitted ', function() {
+      _PermitHandler.setPermits('admin');
+      expect(_PermitHandler.isPermitted('admin, user', 'any')).toBe(true);
+    });
+
+    it('should not be permitted', function() {
+      _PermitHandler.setPermits('admin');
+      expect(_PermitHandler.isPermitted('admin, user', 'all')).toBe(false);
+    });
+  });
 });

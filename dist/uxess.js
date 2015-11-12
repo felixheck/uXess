@@ -35,7 +35,6 @@ angular.module('templates', [])
 
 	angular.module('uxess').service('AccessHandler', [
     'ACCESS_TYPES',
-    'PermitHandler',
     AccessHandler
   ]);
 
@@ -47,9 +46,8 @@ angular.module('templates', [])
    * Handle access to UI based on permits
    *
    * @param {Object.<string>} ACCESS_TYPES Available access types (DI)
-   * @param {Object} PermitHandler Factory to handle permits (DI)
    */
-  function AccessHandler(ACCESS_TYPES, PermitHandler) {
+  function AccessHandler(ACCESS_TYPES) {
 
     /**
      * @type {Object}
@@ -73,7 +71,7 @@ angular.module('templates', [])
      */
     this.setDefaultAccessType = function setDefaultAccessType(accessType) {
       var isVerified = this.verifyAccessType(accessType);
-      var parsedAccessType = parseAccessType(accessType);
+      var parsedAccessType = this.parseAccessType(accessType);
 
       if(isVerified) {
         data.defaultAccessType = parsedAccessType;
@@ -104,7 +102,7 @@ angular.module('templates', [])
      * @returns {boolean} Access type is valid
      */
     this.verifyAccessType = function verifyAccessType(accessType) {
-      var parsedAccessType = parseAccessType(accessType);
+      var parsedAccessType = this.parseAccessType(accessType);
       var accessTypeKeys = Object.keys(ACCESS_TYPES);
 
       return accessTypeKeys.indexOf(parsedAccessType) !== -1
@@ -115,31 +113,12 @@ angular.module('templates', [])
      * @public
      *
      * @description
-     * Check whether UI element is accessible for user
-     *
-     * @param {(Array.<?string> | string)} permits Permits to be searched for
-     * @param {string} accessType Required access type
-     * @returns {boolean} UI element is accessible
-     */
-    this.isAccessible = function isAccessible(permits, accessType) {
-      var isVerified = this.verifyAccessType(accessType);
-      var parsedAccessType = parseAccessType(accessType);
-      var permitInspector = ACCESS_TYPES[parsedAccessType];
-
-      return isVerified && PermitHandler[permitInspector](permits);
-    };
-
-    /**
-     * @function
-     * @private
-     *
-     * @description
      * Parse passed access type
      *
      * @param {string} accessType Access type to be parsed
      * @returns {string} Parsed access type
      */
-    function parseAccessType(accessType) {
+    this.parseAccessType = function parseAccessType(accessType) {
       var parsedAccessType = data.defaultAccessType;
 
       if(angular.isString(accessType)) {
@@ -182,6 +161,8 @@ angular.module('templates', [])
 
 	angular.module('uxess').service('PermitHandler', [
     '$rootScope',
+    'ACCESS_TYPES',
+    'AccessHandler',
     PermitHandler
   ]);
 
@@ -193,8 +174,10 @@ angular.module('templates', [])
    * Handle permits and share data
    *
    * @param {Object} $rootScope Access to root scope (DI)
+   * @param {Object.<string>} ACCESS_TYPES Available access types (DI)
+   * @param {Object} AccessHandler Factory to handle access types (DI)
    */
-  function PermitHandler($rootScope) {
+  function PermitHandler($rootScope, ACCESS_TYPES, AccessHandler) {
 
     /**
      * @type {Object}
@@ -241,6 +224,7 @@ angular.module('templates', [])
      * @returns {Array.<?string>} `data.permits`
      */
     this.getPermits = function getPermits() {
+      var test;
       return data.permits;
     };
 
@@ -257,23 +241,6 @@ angular.module('templates', [])
      */
     this.setPermits = function setPermits(permits) {
       data.permits = this.parsePermits(permits);
-      $rootScope.$broadcast('uxsPermitsChanged');
-    };
-
-    /**
-     * @function
-     * @public
-     *
-     * @description
-     * Add permits to `data.permits`
-     *
-     * @fires `uxsPermitsChanged`
-     *
-     * @param {(Array.<?string> | string)} permits Permissions to be added
-     */
-    this.addPermits = function addPermits(permits) {
-      var parsedPermits = this.parsePermits(permits);
-      Array.prototype.push.apply(data.permits, parsedPermits);
       $rootScope.$broadcast('uxsPermitsChanged');
     };
 
@@ -325,6 +292,25 @@ angular.module('templates', [])
 
     /**
      * @function
+     * @public
+     *
+     * @description
+     * Check whether UI element is accessible for user
+     *
+     * @param {(Array.<?string> | string)} permits Permits to be searched for
+     * @param {string} accessType Required access type
+     * @returns {boolean} UI element is accessible
+     */
+    this.isPermitted = function isPermitted(permits, accessType) {
+      var isVerified = AccessHandler.verifyAccessType(accessType);
+      var parsedAccessType = AccessHandler.parseAccessType(accessType);
+      var permitInspector = ACCESS_TYPES[parsedAccessType];
+
+      return isVerified && this[permitInspector](permits);
+    };
+
+    /**
+     * @function
      * @private
      *
      * @description
@@ -368,7 +354,7 @@ angular.module('templates', [])
 
   angular.module('uxess').directive('uxsIf', [
     '$animate',
-    'AccessHandler',
+    'PermitHandler',
     uxsIf
   ]);
 
@@ -381,10 +367,10 @@ angular.module('templates', [])
    * Handle UI elements based on permits
    *
    * @param {Object} $animate Service to animate UI elements (DI)
-   * @param {Object} AccessHandler Factory to handle access (DI)
+   * @param {Object} PermitHandler Factory to handle permits (DI)
    * @returns {Object} Grant access to private scope
    */
-  function uxsIf($animate, AccessHandler) {
+  function uxsIf($animate, PermitHandler) {
 
     /**
      * @function
@@ -402,7 +388,7 @@ angular.module('templates', [])
      * @param {Function} transclude Transclude linking function
      */
     function link(scope, element, attr, ctrl, transclude) {
-      var isAccessible = AccessHandler.isAccessible(attrs.uxsIf, attrs.uxsType);
+      var isAccessible = PermitHandler.isPermitted(attrs.uxsIf, attrs.uxsType);
 
       if(isAccessible) {
         $animate.enter();
@@ -417,7 +403,7 @@ angular.module('templates', [])
     return {
       multiElement: true,
       transclude: 'element',
-      priority: 500,
+      priority: 1000,
       terminal: true,
       restrict: 'A',
       link: link

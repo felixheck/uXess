@@ -1,12 +1,10 @@
 describe('uxess.accessHandler', function() {
   var _AccessHandler;
-  var _PermitHandler;
 
   beforeEach(module('uxess'));
 
-  beforeEach(inject(function (AccessHandler, PermitHandler) {
+  beforeEach(inject(function (AccessHandler) {
     _AccessHandler = AccessHandler;
-    _PermitHandler = PermitHandler;
   }));
 
   it('should inject mock factory', function () {
@@ -45,19 +43,5 @@ describe('uxess.accessHandler', function() {
     it('should match accessTypes constant | defaultType', function() {
       expect(_AccessHandler.verifyAccessType(null)).toBe(true);
     });
-  });
-
-  describe('isAccessible', function() {
-    it('should be accessible ', function() {
-      _PermitHandler.setPermits('admin');
-      expect(_AccessHandler.isAccessible('admin, user', 'any')).toBe(true);
-    });
-
-    it('should not be accessible', function() {
-      _PermitHandler.setPermits('admin');
-      expect(_AccessHandler.isAccessible('admin, user', 'all')).toBe(false);
-    });
-
-
   });
 });

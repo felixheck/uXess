@@ -11,7 +11,7 @@
 
   angular.module('uxess').directive('uxsIf', [
     '$animate',
-    'AccessHandler',
+    'PermitHandler',
     uxsIf
   ]);
 
@@ -24,10 +24,10 @@
    * Handle UI elements based on permits
    *
    * @param {Object} $animate Service to animate UI elements (DI)
-   * @param {Object} AccessHandler Factory to handle access (DI)
+   * @param {Object} PermitHandler Factory to handle permits (DI)
    * @returns {Object} Grant access to private scope
    */
-  function uxsIf($animate, AccessHandler) {
+  function uxsIf($animate, PermitHandler) {
 
     /**
      * @function
@@ -45,7 +45,7 @@
      * @param {Function} transclude Transclude linking function
      */
     function link(scope, element, attr, ctrl, transclude) {
-      var isAccessible = AccessHandler.isAccessible(attrs.uxsIf, attrs.uxsType);
+      var isAccessible = PermitHandler.isPermitted(attrs.uxsIf, attrs.uxsType);
 
       if(isAccessible) {
         $animate.enter();
@@ -60,7 +60,7 @@
     return {
       multiElement: true,
       transclude: 'element',
-      priority: 500,
+      priority: 1000,
       terminal: true,
       restrict: 'A',
       link: link

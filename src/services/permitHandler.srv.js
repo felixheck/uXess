@@ -11,6 +11,8 @@
 
 	angular.module('uxess').service('PermitHandler', [
     '$rootScope',
+    'ACCESS_TYPES',
+    'AccessHandler',
     PermitHandler
   ]);
 
@@ -22,8 +24,10 @@
    * Handle permits and share data
    *
    * @param {Object} $rootScope Access to root scope (DI)
+   * @param {Object.<string>} ACCESS_TYPES Available access types (DI)
+   * @param {Object} AccessHandler Factory to handle access types (DI)
    */
-  function PermitHandler($rootScope) {
+  function PermitHandler($rootScope, ACCESS_TYPES, AccessHandler) {
 
     /**
      * @type {Object}
@@ -70,6 +74,7 @@
      * @returns {Array.<?string>} `data.permits`
      */
     this.getPermits = function getPermits() {
+      var test;
       return data.permits;
     };
 
@@ -86,23 +91,6 @@
      */
     this.setPermits = function setPermits(permits) {
       data.permits = this.parsePermits(permits);
-      $rootScope.$broadcast('uxsPermitsChanged');
-    };
-
-    /**
-     * @function
-     * @public
-     *
-     * @description
-     * Add permits to `data.permits`
-     *
-     * @fires `uxsPermitsChanged`
-     *
-     * @param {(Array.<?string> | string)} permits Permissions to be added
-     */
-    this.addPermits = function addPermits(permits) {
-      var parsedPermits = this.parsePermits(permits);
-      Array.prototype.push.apply(data.permits, parsedPermits);
       $rootScope.$broadcast('uxsPermitsChanged');
     };
 
@@ -150,6 +138,25 @@
      */
     this.hasNonePermits = function hasNonePermits(permits) {
       return !this.hasAnyPermits(permits);
+    };
+
+    /**
+     * @function
+     * @public
+     *
+     * @description
+     * Check whether UI element is accessible for user
+     *
+     * @param {(Array.<?string> | string)} permits Permits to be searched for
+     * @param {string} accessType Required access type
+     * @returns {boolean} UI element is accessible
+     */
+    this.isPermitted = function isPermitted(permits, accessType) {
+      var isVerified = AccessHandler.verifyAccessType(accessType);
+      var parsedAccessType = AccessHandler.parseAccessType(accessType);
+      var permitInspector = ACCESS_TYPES[parsedAccessType];
+
+      return isVerified && this[permitInspector](permits);
     };
 
     /**
