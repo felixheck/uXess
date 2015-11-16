@@ -98,7 +98,7 @@
      * @public
      *
      * @description
-     * Check whether all passed permits are included in `data.permits`
+     * Check if all passed permits are included in `data.permits`
      *
      * @param {(Array.<?string> | string)} permits Permits to be searched for
      * @returns {boolean} All passed permits are set
@@ -114,7 +114,7 @@
      * @public
      *
      * @description
-     * Check whether any of passed permits is included in `data.permits`
+     * Check if any of passed permits is included in `data.permits`
      *
      * @param {(Array.<?string> | string)} permits Permits to be searched for
      * @returns {boolean} Any of passed permits is set
@@ -130,7 +130,7 @@
      * @public
      *
      * @description
-     * Check whether none of passed permits is included in `data.permits`
+     * Check if none of passed permits is included in `data.permits`
      *
      * @param {(Array.<?string> | string)} permits Permits to be searched for
      * @returns {boolean} None of passed permits is set
@@ -144,7 +144,7 @@
      * @public
      *
      * @description
-     * Check whether UI element is accessible for user
+     * Check if UI element is accessible for user
      *
      * @param {(Array.<?string> | string)} permits Permits to be searched for
      * @param {string} accessType Required access type
@@ -163,7 +163,7 @@
      * @private
      *
      * @description
-     * Check whether element is included in `data.permits`
+     * Check if element is included in `data.permits`
      *
      * @param {string} element Element to be searched for
      * @returns {boolean} Element is included

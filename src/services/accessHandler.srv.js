@@ -9,7 +9,7 @@
 
   'use strict';
 
-	angular.module('uxess').service('AccessHandler', [
+  angular.module('uxess').service('AccessHandler', [
     'ACCESS_TYPES',
     AccessHandler
   ]);
@@ -72,7 +72,7 @@
      * @public
      *
      * @description
-     * Check whether passed access type is valid
+     * Check if passed access type is valid
      *
      * @param {string} accessType Access type to be checked
      * @returns {boolean} Access type is valid

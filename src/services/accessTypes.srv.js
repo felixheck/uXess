@@ -9,7 +9,7 @@
 
   'use strict';
 
-	angular.module('uxess').constant('ACCESS_TYPES', {
+  angular.module('uxess').constant('ACCESS_TYPES', {
     'any': 'hasAnyPermits',
     'all': 'hasPermits',
     'none': 'hasNonePermits'

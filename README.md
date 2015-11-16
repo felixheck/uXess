@@ -4,6 +4,7 @@
 
 1. [Introduction](#introduction)
 1. [Install](#install)
+1. [Changelog](#changelog)
 1. [Licence](#license)
 
 ## Introduction
@@ -11,6 +12,8 @@
 
 ```
 ## Install
+
+## Changelog
 
 ## License
 The MIT License
