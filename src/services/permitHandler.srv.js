@@ -86,7 +86,7 @@
      *
      * @fires `uxsPermitsChanged`
      *
-     * @param {(Array.<?string> | string)} permits Permissions to be set
+     * @param {(Array.<?string> | string)} permits Permits to be set
      */
     this.setPermits = function setPermits(permits) {
       data.permits = this.parsePermits(permits);
@@ -100,7 +100,8 @@
      * @description
      * Check if all passed permits are included in `data.permits`
      *
-     * @param {(Array.<?string> | string)} permits Permits to be searched for
+     * @param {(Array.<?string> | string)} permits Permits to be
+     *    searched for
      * @returns {boolean} All passed permits are set
      */
     this.hasPermits = function hasPermits(permits) {
@@ -116,7 +117,8 @@
      * @description
      * Check if any of passed permits is included in `data.permits`
      *
-     * @param {(Array.<?string> | string)} permits Permits to be searched for
+     * @param {(Array.<?string> | string)} permits Permits to be
+     *    searched for
      * @returns {boolean} Any of passed permits is set
      */
     this.hasAnyPermits = function hasAnyPermits(permits) {
@@ -132,7 +134,8 @@
      * @description
      * Check if none of passed permits is included in `data.permits`
      *
-     * @param {(Array.<?string> | string)} permits Permits to be searched for
+     * @param {(Array.<?string> | string)} permits Permits to be
+     *    searched for
      * @returns {boolean} None of passed permits is set
      */
     this.hasNonePermits = function hasNonePermits(permits) {
@@ -146,7 +149,8 @@
      * @description
      * Check if UI element is accessible for user
      *
-     * @param {(Array.<?string> | string)} permits Permits to be searched for
+     * @param {(Array.<?string> | string)} permits Permits to be
+     *    searched for
      * @param {string} accessType Required access type
      * @returns {boolean} UI element is accessible
      */

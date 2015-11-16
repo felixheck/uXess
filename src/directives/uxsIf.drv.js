@@ -1,7 +1,7 @@
 /*!
  * @author Felix Heck <hi@whoTheHeck.de>
  * @version 0.0.1
- * @copyright Felix Heck 2015
+ * @copyright Felix Heck 2016
  * @license MIT
  */
 
@@ -38,9 +38,12 @@
      *
      * @listens `uxsPermitsChanged`
      *
-     * @param {Object} scope Scope to be used for registering event handler
-     * @param {Object} element The element where the directive is to be used
-     * @param {Array.<?string>} attr List of attributes declared on this element
+     * @param {Object} scope Scope to be used for registering event
+     *    handler
+     * @param {Object} element The element where the directive is to
+     *    be used
+     * @param {Array.<?string>} attr List of attributes declared on
+     *    this element
      * @param {Function} ctrl Directive's required controller instance
      * @param {Function} transclude Transclude linking function
      */
