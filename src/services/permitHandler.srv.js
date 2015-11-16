@@ -74,7 +74,6 @@
      * @returns {Array.<?string>} `data.permits`
      */
     this.getPermits = function getPermits() {
-      var test;
       return data.permits;
     };
 
