@@ -1,6 +1,6 @@
 {
   "name": "uxess",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Client-side authorization middleware to handle ui element based on permissions",
   "keywords": [],
   "author": {
