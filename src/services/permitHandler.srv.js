@@ -9,11 +9,9 @@
 
   'use strict';
 
-	angular.module('uxess').service('PermitHandler', [
+  angular.module('uxs').service('uxsPermitHandler', [
     '$rootScope',
-    'ACCESS_TYPES',
-    'AccessHandler',
-    PermitHandler
+    UxsPermitHandler
   ]);
 
   /**
@@ -24,10 +22,8 @@
    * Handle permits and share data
    *
    * @param {Object} $rootScope Access to root scope (DI)
-   * @param {Object.<string>} ACCESS_TYPES Available access types (DI)
-   * @param {Object} AccessHandler Factory to handle access types (DI)
    */
-  function PermitHandler($rootScope, ACCESS_TYPES, AccessHandler) {
+  function UxsPermitHandler($rootScope) {
 
     /**
      * @type {Object}
@@ -95,89 +91,6 @@
 
     /**
      * @function
-     * @public
-     *
-     * @description
-     * Check if all passed permits are included in `data.permits`
-     *
-     * @param {(Array.<?string> | string)} permits Permits to be
-     *    searched for
-     * @returns {boolean} All passed permits are set
-     */
-    this.hasPermits = function hasPermits(permits) {
-      var parsedPermits = this.parsePermits(permits);
-
-      return parsedPermits.every(inspectPermits);
-    };
-
-    /**
-     * @function
-     * @public
-     *
-     * @description
-     * Check if any of passed permits is included in `data.permits`
-     *
-     * @param {(Array.<?string> | string)} permits Permits to be
-     *    searched for
-     * @returns {boolean} Any of passed permits is set
-     */
-    this.hasAnyPermits = function hasAnyPermits(permits) {
-      var parsedPermits = this.parsePermits(permits);
-
-      return parsedPermits.some(inspectPermits);
-    };
-
-    /**
-     * @function
-     * @public
-     *
-     * @description
-     * Check if none of passed permits is included in `data.permits`
-     *
-     * @param {(Array.<?string> | string)} permits Permits to be
-     *    searched for
-     * @returns {boolean} None of passed permits is set
-     */
-    this.hasNonePermits = function hasNonePermits(permits) {
-      return !this.hasAnyPermits(permits);
-    };
-
-    /**
-     * @function
-     * @public
-     *
-     * @description
-     * Check if UI element is accessible for user
-     *
-     * @param {(Array.<?string> | string)} permits Permits to be
-     *    searched for
-     * @param {string} accessType Required access type
-     * @returns {boolean} UI element is accessible
-     */
-    this.isPermitted = function isPermitted(permits, accessType) {
-      var isVerified = AccessHandler.verifyAccessType(accessType);
-      var parsedAccessType = AccessHandler.parseAccessType(accessType);
-      var permitInspector = ACCESS_TYPES[parsedAccessType];
-
-      return isVerified && this[permitInspector](permits);
-    };
-
-    /**
-     * @function
-     * @private
-     *
-     * @description
-     * Check if element is included in `data.permits`
-     *
-     * @param {string} element Element to be searched for
-     * @returns {boolean} Element is included
-     */
-    function inspectPermits(element) {
-      return data.permits.indexOf(element) !== -1;
-    }
-
-    /**
-     * @function
      * @private
      *
      * @description
@@ -188,7 +101,7 @@
      */
     function parsePermitList(permits) {
       return permits.map(function(permit) {
-        return angular.lowercase(permit).trim();
+        return angular.lowercase(permit).trim() || '';
       });
     }
   }

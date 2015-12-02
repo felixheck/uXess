@@ -35,10 +35,8 @@
       buildify()
         .concat(getDistFiles([
           'src',
-          'src/controllers',
           'src/services',
-          'src/directives',
-          'src/filters'
+          'src/directives'
         ]))
         .save('dist/uxess.js');
     },

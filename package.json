@@ -17,7 +17,7 @@
     "url": "https://github.com/felixheck/uXess/issues"
   },
   "license": "MIT",
-  "main": "./src/uxess.js",
+  "main": "./src/index.js",
   "scripts": {
     "start": "npm run watch:dist",
     "test": "npm run test:unit",
@@ -25,9 +25,7 @@
     "cover": "opn test/coverage/index.html --no-wait -- 'google chrome'",
     "test:unit": "karma start ./config/karma.conf.js",
     "test:e2e": "npm run protractor --force",
-    "build": "npm run build:cache && npm run build:dist",
-    "build:dist": "node config/buildify.conf.js dist:build",
-    "build:cache": "npm-html2js -i 'src/partials/**/*.tpl.html' -o 'src/templates.js' -m 'templates' -b 'src/partials'",
+    "build": "node config/buildify.conf.js dist:build",
     "watch:dist": "gacher -p 'src/**/*.js' -c 'npm run build:dist'",
     "protractor": "node_modules/.bin/protractor config/protractor.conf.js",
     "selenium": "node_modules/.bin/webdriver-manager start"
@@ -44,7 +42,6 @@
     "karma-jasmine": "^0.3.6",
     "karma-mocha-reporter": "^1.1.1",
     "karma-phantomjs-launcher": "^0.2.1",
-    "npm-html2js": "^0.1.8",
     "opn-cli": "^1.0.0",
     "phantomjs": "^1.9.18",
     "protractor": "^2.5.1"

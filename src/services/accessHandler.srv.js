@@ -7,11 +7,13 @@
 
 ;(function() {
 
-  'use strict';
+	'use strict';
 
-  angular.module('uxess').service('AccessHandler', [
-    'ACCESS_TYPES',
-    AccessHandler
+	angular.module('uxs').service('uxsAccessHandler', [
+    'uxsAUTH_TYPES',
+    'uxsAuthTypeHandler',
+    'uxsPermitHandler',
+    UxsAccessHandler
   ]);
 
   /**
@@ -19,89 +21,90 @@
    * @public
    *
    * @description
-   * Handle access to UI based on permits
+   * Handle access and authorization
    *
-   * @param {Object.<string>} ACCESS_TYPES Available access types (DI)
+   * @param {Object.<string, string>} uxsAUTH_TYPES Available auth types (DI)
+   * @param {Object.<string, Function>} uxsAuthTypeHandler Factory to handle auth types (DI)
+   * @param {Object.<string, Function>} uxsPermitHandler Factory to handle access (DI)
    */
-  function AccessHandler(ACCESS_TYPES) {
+  function UxsAccessHandler(uxsAUTH_TYPES, uxsAuthTypeHandler, uxsPermitHandler) {
+    /**
+     * @function
+     * @public
+     *
+     * @description
+     * Check if all passed permits are included in `data.permits` of `uxsPermitHandler`
+     *
+     * @param {(Array.<?string> | string)} permits Permits to be searched for
+     * @returns {boolean} All passed permits are set
+     */
+    this.hasPermits = function hasPermits(permits) {
+      var parsedPermits = uxsPermitHandler.parsePermits(permits);
+
+      return parsedPermits.every(inspectPermits);
+    };
 
     /**
-     * @type {Object}
+     * @function
+     * @public
+     *
+     * @description
+     * Check if any of passed permits is included in `data.permits` of `uxsPermitHandler`
+     *
+     * @param {(Array.<?string> | string)} permits Permits to be searched for
+     * @returns {boolean} Any of passed permits is set
+     */
+    this.hasAnyPermits = function hasAnyPermits(permits) {
+      var parsedPermits = uxsPermitHandler.parsePermits(permits);
+
+      return parsedPermits.some(inspectPermits);
+    };
+
+    /**
+     * @function
+     * @public
+     *
+     * @description
+     * Check if none of passed permits is included in `data.permits` of `uxsPermitHandler`
+     *
+     * @param {(Array.<?string> | string)} permits Permits to be searched for
+     * @returns {boolean} None of passed permits is set
+     */
+    this.hasNonePermits = function hasNonePermits(permits) {
+      return !this.hasAnyPermits(permits);
+    };
+
+    /**
+     * @function
+     * @public
+     *
+     * @description
+     * Check if UI element is accessible for user
+     *
+     * @param {(Array.<?string> | string)} permits Permits to be searched for
+     * @param {string} authType Required auth type
+     * @returns {boolean} UI element is accessible
+     */
+    this.isPermitted = function isPermitted(permits, authType) {
+      var isVerified = uxsAuthTypeHandler.isAuthType(authType);
+      var parsedAuthType = uxsAuthTypeHandler.parseAuthType(authType);
+      var permitInspector = uxsAUTH_TYPES[parsedAuthType];
+
+      return isVerified && this[permitInspector](permits);
+    };
+
+    /**
+     * @function
      * @private
      *
      * @description
-     * Store private variables in a centrally manner
+     * Check if element is included in `data.permits` of `uxsPermitHandler`
+     *
+     * @param {string} element Element to be searched for
+     * @returns {boolean} Element is included
      */
-    var data = {
-      defaultAccessType:'any'
-    };
-
-    /**
-     * @function
-     * @public
-     *
-     * @description
-     * Set the default access type
-     *
-     * @param {string} accessType Access type to be set
-     */
-    this.setDefaultAccessType = function setDefaultAccessType(accessType) {
-      var isVerified = this.verifyAccessType(accessType);
-      var parsedAccessType = this.parseAccessType(accessType);
-
-      if(isVerified) {
-        data.defaultAccessType = parsedAccessType;
-      }
-    };
-
-    /**
-     * @function
-     * @public
-     *
-     * @description
-     * Get the default access type
-     *
-     * @returns {string} `defaultAccessType`
-     */
-    this.getDefaultAccessType = function getDefaultAccessType() {
-      return data.defaultAccessType;
-    };
-
-    /**
-     * @function
-     * @public
-     *
-     * @description
-     * Check if passed access type is valid
-     *
-     * @param {string} accessType Access type to be checked
-     * @returns {boolean} Access type is valid
-     */
-    this.verifyAccessType = function verifyAccessType(accessType) {
-      var parsedAccessType = this.parseAccessType(accessType);
-      var accessTypeKeys = Object.keys(ACCESS_TYPES);
-
-      return accessTypeKeys.indexOf(parsedAccessType) !== -1
-    };
-
-    /**
-     * @function
-     * @public
-     *
-     * @description
-     * Parse passed access type
-     *
-     * @param {string} accessType Access type to be parsed
-     * @returns {string} Parsed access type
-     */
-    this.parseAccessType = function parseAccessType(accessType) {
-      var parsedAccessType = data.defaultAccessType;
-
-      if(angular.isString(accessType)) {
-        parsedAccessType = angular.lowercase(accessType).trim();
-      }
-
-      return parsedAccessType;
+    function inspectPermits(element) {
+      return uxsPermitHandler.getPermits().indexOf(element) !== -1;
     }
   }
 

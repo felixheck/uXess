@@ -1,47 +1,60 @@
-describe('uxess.accessHandler', function() {
-  var _AccessHandler;
+describe('uxsAccessHandler', function() {
+  var _uxsPermitHandler;
+  var _uxsAccessHandler;
 
-  beforeEach(module('uxess'));
+  beforeEach(module('uxs'));
 
-  beforeEach(inject(function (AccessHandler) {
-    _AccessHandler = AccessHandler;
+  beforeEach(inject(function (uxsPermitHandler, uxsAccessHandler) {
+    _uxsPermitHandler = uxsPermitHandler;
+    _uxsAccessHandler = uxsAccessHandler;
   }));
 
-  it('should inject mock factory', function () {
-    expect(_AccessHandler).toBeDefined();
-  });
-
-  describe('setAccessDefaultType | getAccessDefaultType', function() {
-    it('should set default access type', function() {
-      _AccessHandler.setDefaultAccessType('All');
-      expect(_AccessHandler.getDefaultAccessType()).toEqual('all');
+  describe('hasPermits', function () {
+    it('should not match', function () {
+      _uxsPermitHandler.setPermits(['admin']);
+      expect(_uxsAccessHandler.hasPermits(['user'])).toBe(false);
     });
 
-    it('should not set default access type', function() {
-      _AccessHandler.setDefaultAccessType('some');
-      expect(_AccessHandler.getDefaultAccessType()).not.toEqual('all');
+    it('should match', function () {
+      _uxsPermitHandler.setPermits(['admin', 'user']);
+      expect(_uxsAccessHandler.hasPermits(['user'])).toBe(true);
     });
   });
 
-  describe('verifyAccessType', function() {
-    it('should not match accessTypes constant', function() {
-      expect(_AccessHandler.verifyAccessType('some')).toBe(false);
+  describe('hasAnyPermits', function () {
+    it('should not match', function () {
+      _uxsPermitHandler.setPermits(['admin']);
+      expect(_uxsAccessHandler.hasAnyPermits(['user'])).toBe(false);
     });
 
-    it('should match accessTypes constant | capitalize', function() {
-      expect(_AccessHandler.verifyAccessType('All')).toBe(true);
-    });
-
-    it('should match accessTypes constant | uppercase', function() {
-      expect(_AccessHandler.verifyAccessType('ANY')).toBe(true);
-    });
-
-    it('should match accessTypes constant | whitespaces', function() {
-      expect(_AccessHandler.verifyAccessType(' none ')).toBe(true);
-    });
-
-    it('should match accessTypes constant | defaultType', function() {
-      expect(_AccessHandler.verifyAccessType(null)).toBe(true);
+    it('should match', function () {
+      _uxsPermitHandler.setPermits(['admin']);
+      expect(_uxsAccessHandler.hasAnyPermits(['admin', 'user'])).toBe(true);
     });
   });
+
+  describe('hasNonePermits', function () {
+    it('should not match', function () {
+      _uxsPermitHandler.setPermits(['admin']);
+      expect(_uxsAccessHandler.hasNonePermits(['admin'])).toBe(false);
+    });
+
+    it('should match', function () {
+      _uxsPermitHandler.setPermits(['admin']);
+      expect(_uxsAccessHandler.hasNonePermits(['user'])).toBe(true);
+    });
+  });
+
+  describe('isPermitted', function () {
+    it('should be permitted ', function () {
+      _uxsPermitHandler.setPermits('admin');
+      expect(_uxsAccessHandler.isPermitted('admin, user', 'any')).toBe(true);
+    });
+
+    it('should not be permitted', function () {
+      _uxsPermitHandler.setPermits('admin');
+      expect(_uxsAccessHandler.isPermitted('admin, user', 'all')).toBe(false);
+    });
+  });
+
 });

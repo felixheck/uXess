@@ -9,7 +9,6 @@
 
   'use strict';
 
-  angular.module('uxess', [
-    'templates']);
+  angular.module('uxs', []);
 
 })();
