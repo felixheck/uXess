@@ -33,7 +33,7 @@
      * Store private variables in a centrally manner
      */
     var data = {
-      defaultAuthType:'any'
+      defaultAuthType: 'any'
     };
 
     /**

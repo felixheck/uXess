@@ -25,7 +25,7 @@
    *
    * @param {Object.<string, string>} uxsAUTH_TYPES Available auth types (DI)
    * @param {Object.<string, Function>} uxsAuthTypeHandler Factory to handle auth types (DI)
-   * @param {Object.<string, Function>} uxsPermitHandler Factory to handle access (DI)
+   * @param {Object.<string, Function>} uxsPermitHandler Factory to handle permits (DI)
    */
   function UxsAccessHandler(uxsAUTH_TYPES, uxsAuthTypeHandler, uxsPermitHandler) {
     /**

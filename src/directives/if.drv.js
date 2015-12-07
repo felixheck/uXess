@@ -11,6 +11,7 @@
 
   angular.module('uxs').directive('uxsIf', [
     '$animate',
+    '$parse',
     'PermitHandler',
     uxsIf
   ]);
@@ -24,10 +25,52 @@
    * Handle UI elements based on permits
    *
    * @param {Object} $animate Service to animate UI elements (DI)
+   * @param {Object} $parse Service to convert expressions (DI)
    * @param {Object.<string, Function>} PermitHandler Factory to handle permits (DI)
    * @returns {Object} Grant access to private scope
    */
-  function uxsIf($animate, PermitHandler) {
+  function uxsIf($animate, $parse, PermitHandler) {
+
+    /**
+     * @function
+     * @private
+     *
+     * @description
+     * Extract the attribute's value by parsing or taking over
+     *
+     * @param {Object} scope Current scope context
+     * @param {string} attr Attribute's value
+     * @returns {Array.<?string> | string} Extracted attribute's value
+     */
+    function extractAttribute(scope, attr) {
+      var extractedAttr;
+
+      try {
+        extractedAttr = $parse(attr)(scope);
+      } catch(error) {
+        extractedAttr = attr;
+      }
+
+      return extractedAttr;
+    }
+
+    /**
+     * @function
+     * @private
+     *
+     * @description
+     * Check if the user meets the required permits and the auth type
+     *
+     * @param {Object} scope Current scope context
+     * @param {Object} attrs The HTML elements attributes
+     * @returns {boolean} If the user credentials are acceptable
+     */
+    function checkCredentials(scope, attrs) {
+      var permits = extractAttribute(scope, attrs.uxsIf);
+      var authType = extractAttribute(scope, attrs.uxsType);
+
+      return PermitHandler.isPermitted(permits, authType);
+    }
 
     /**
      * @function
@@ -45,16 +88,33 @@
      * @param {Function} transclude Transclude linking function
      */
     function link(scope, element, attrs, ctrl, transclude) {
-      var isAccessible = PermitHandler.isPermitted(attrs.uxsIf, attrs.uxsType);
+      var isAccessible;
+      var cloneReference;
 
-      if(isAccessible) {
-        $animate.enter();
-      } else {
-        $animate.leave();
+      /**
+       * @function
+       * @private
+       *
+       * @description
+       * Show or hide element based on credentials
+       */
+      function checkVisibility() {
+        isAccessible = checkCredentials(scope, attrs);
+
+        if (isAccessible) {
+          transclude(function(clone) {
+            clone.push(document.createComment(' end uxsIf '));
+            cloneReference = clone;
+            $animate.enter(clone, element.parent(), $element);
+          });
+        } else if (!isAccessible && cloneReference) {
+          $animate.leave(cloneReference);
+          cloneReference = null;
+        }
       }
 
-      angular.noop();
-      scope.$on('uxsPermitsChanged', angular.noop);
+      checkVisibility();
+      scope.$on('uxsPermitsChanged', checkVisibility);
     }
 
     return {
