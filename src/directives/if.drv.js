@@ -12,7 +12,8 @@
   angular.module('uxs').directive('uxsIf', [
     '$animate',
     '$parse',
-    'PermitHandler',
+    '$interpolate',
+    'uxsAccessHandler',
     uxsIf
   ]);
 
@@ -25,11 +26,16 @@
    * Handle UI elements based on permits
    *
    * @param {Object} $animate Service to animate UI elements (DI)
-   * @param {Object} $parse Service to convert expressions (DI)
-   * @param {Object.<string, Function>} PermitHandler Factory to handle permits (DI)
+   * @param {Object} $parse Service to convert expression contents (DI)
+   * @param {Object} $interpolate Service to convert expressions (DI)
+   * @param {Object.<string, Function>} uxsAccessHandler Factory to handle authorization (DI)
    * @returns {Object} Grant access to private scope
    */
-  function uxsIf($animate, $parse, PermitHandler) {
+  function uxsIf($animate, $parse, $interpolate, uxsAccessHandler) {
+
+    function isExpression(attr) {
+      return attr && attr.indexOf('{{') !== -1 && attr.indexOf('}}') !== -1;
+    }
 
     /**
      * @function
@@ -43,15 +49,21 @@
      * @returns {Array.<?string> | string} Extracted attribute's value
      */
     function extractAttribute(scope, attr) {
+      var hasExpression = isExpression(attr);
+      var parsingFn = $parse;
       var extractedAttr;
 
+      if(hasExpression) {
+        parsingFn = $interpolate;
+      }
+
       try {
-        extractedAttr = $parse(attr)(scope);
+        extractedAttr = parsingFn(attr)(scope);
       } catch(error) {
         extractedAttr = attr;
       }
 
-      return extractedAttr;
+      return extractedAttr || attr;
     }
 
     /**
@@ -69,7 +81,7 @@
       var permits = extractAttribute(scope, attrs.uxsIf);
       var authType = extractAttribute(scope, attrs.uxsType);
 
-      return PermitHandler.isPermitted(permits, authType);
+      return uxsAccessHandler.isPermitted(permits, authType);
     }
 
     /**
@@ -106,7 +118,7 @@
             clone.push(document.createComment(' end uxsIf '));
             cloneReference = clone;
             newScope.$destroy();
-            $animate.enter(clone, element.parent(), $element);
+            $animate.enter(clone, element.parent(), element);
           });
         } else if (!isAccessible && cloneReference) {
           $animate.leave(cloneReference);

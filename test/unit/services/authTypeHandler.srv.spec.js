@@ -1,6 +1,5 @@
 describe('uxsAuthTypeHandler configuration', function() {
-  var _uxsAuthTypeHandler;
-
+  var uxsAuthTypeHandler;
 
   beforeEach(function () {
     angular.module('authTypeHandlerConfig', []).config(function (uxsAuthTypeHandlerProvider) {
@@ -10,59 +9,59 @@ describe('uxsAuthTypeHandler configuration', function() {
 
   });
 
-  beforeEach(inject(function (uxsAuthTypeHandler) {
-    _uxsAuthTypeHandler = uxsAuthTypeHandler;
+  beforeEach(inject(function (_uxsAuthTypeHandler_) {
+    uxsAuthTypeHandler = _uxsAuthTypeHandler_;
   }));
 
   it('should provide default auth type', function() {
-    expect(_uxsAuthTypeHandler.getDefaultAuthType()).toEqual('any');
+    expect(uxsAuthTypeHandler.getDefaultAuthType()).toEqual('any');
   });
 });
 
 describe('uxsAuthTypeHandler', function() {
-  var _uxsAuthTypeHandler;
+  var uxsAuthTypeHandler;
 
   beforeEach(module('uxs'));
 
-  beforeEach(inject(function (uxsAuthTypeHandler) {
-    _uxsAuthTypeHandler = uxsAuthTypeHandler;
+  beforeEach(inject(function (_uxsAuthTypeHandler_) {
+    uxsAuthTypeHandler = _uxsAuthTypeHandler_;
   }));
 
   it('should inject mock factory', function () {
-    expect(_uxsAuthTypeHandler).toBeDefined();
+    expect(uxsAuthTypeHandler).toBeDefined();
   });
 
   describe('setAuthDefaultType | getAuthDefaultType', function() {
     it('should set default auth type', function() {
-      _uxsAuthTypeHandler.setDefaultAuthType('All');
-      expect(_uxsAuthTypeHandler.getDefaultAuthType()).toEqual('all');
+      uxsAuthTypeHandler.setDefaultAuthType('All');
+      expect(uxsAuthTypeHandler.getDefaultAuthType()).toEqual('all');
     });
 
     it('should not set default auth type', function() {
-      _uxsAuthTypeHandler.setDefaultAuthType('some');
-      expect(_uxsAuthTypeHandler.getDefaultAuthType()).not.toEqual('all');
+      uxsAuthTypeHandler.setDefaultAuthType('some');
+      expect(uxsAuthTypeHandler.getDefaultAuthType()).not.toEqual('all');
     });
   });
 
   describe('isAuthType', function() {
     it('should not match uxsAuthTypes constant', function() {
-      expect(_uxsAuthTypeHandler.isAuthType('some')).toBe(false);
+      expect(uxsAuthTypeHandler.isAuthType('some')).toBe(false);
     });
 
     it('should match uxsAuthTypes constant | capitalize', function() {
-      expect(_uxsAuthTypeHandler.isAuthType('All')).toBe(true);
+      expect(uxsAuthTypeHandler.isAuthType('All')).toBe(true);
     });
 
     it('should match uxsAuthTypes constant | uppercase', function() {
-      expect(_uxsAuthTypeHandler.isAuthType('ANY')).toBe(true);
+      expect(uxsAuthTypeHandler.isAuthType('ANY')).toBe(true);
     });
 
     it('should match uxsAuthTypes constant | whitespaces', function() {
-      expect(_uxsAuthTypeHandler.isAuthType(' none ')).toBe(true);
+      expect(uxsAuthTypeHandler.isAuthType(' none ')).toBe(true);
     });
 
     it('should match uxsAuthTypes constant | defaultType', function() {
-      expect(_uxsAuthTypeHandler.isAuthType(null)).toBe(true);
+      expect(uxsAuthTypeHandler.isAuthType(null)).toBe(true);
     });
   });
 });

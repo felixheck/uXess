@@ -7,7 +7,7 @@
       basePath: '../',
       frameworks: ['jasmine'],
       files: [
-        'node_modules/angular/angular.min.js',
+        'node_modules/angular/angular.js',
         'node_modules/angular-animate/angular-animate.min.js',
         'node_modules/angular-mocks/angular-mocks.js',
         'src/index.js',
@@ -34,12 +34,14 @@
         'karma-jasmine',
         'karma-mocha-reporter',
         'karma-coverage',
+        'karma-firefox-launcher',
+        'karma-chrome-launcher',
         'karma-phantomjs-launcher'
       ],
       port: 9876,
       colors: true,
       logLevel: config.LOG_INFO,
-      browsers: ['PhantomJS'],
+      browsers: ['Firefox', 'Chrome'],
       autoWatch: true,
       singleRun: false
     });

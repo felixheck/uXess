@@ -1,6 +1,5 @@
 describe('uxsPermitHandler configuration', function() {
-  var _uxsPermitHandler;
-
+  var uxsPermitHandler;
 
   beforeEach(function () {
     angular.module('permitHandlerConfig', []).config(function (uxsPermitHandlerProvider) {
@@ -10,98 +9,98 @@ describe('uxsPermitHandler configuration', function() {
 
   });
 
-  beforeEach(inject(function (uxsPermitHandler) {
-    _uxsPermitHandler = uxsPermitHandler;
+  beforeEach(inject(function (_uxsPermitHandler_) {
+    uxsPermitHandler = _uxsPermitHandler_;
   }));
 
   it('should provide permits', function() {
-    expect(_uxsPermitHandler.getPermits()).toEqual(['admin']);
+    expect(uxsPermitHandler.getPermits()).toEqual(['admin']);
   });
 });
 
 describe('uxsPermitHandler', function() {
-  var _uxsPermitHandler;
-  var _rootScope;
+  var uxsPermitHandler;
+  var $rootScope;
 
   beforeEach(module('uxs'));
 
-  beforeEach(inject(function ($rootScope, uxsPermitHandler) {
-    _rootScope = $rootScope;
-    _uxsPermitHandler = uxsPermitHandler;
+  beforeEach(inject(function (_$rootScope_, _uxsPermitHandler_) {
+    $rootScope = _$rootScope_;
+    uxsPermitHandler = _uxsPermitHandler_;
   }));
 
   it('should inject mock factory', function() {
-    expect(_rootScope).toBeDefined();
-    expect(_uxsPermitHandler).toBeDefined();
+    expect($rootScope).toBeDefined();
+    expect(uxsPermitHandler).toBeDefined();
   });
 
 
   describe('setPermits | getPermits', function() {
     it('should set permits', function() {
-      _uxsPermitHandler.setPermits(['admin']);
-      expect(_uxsPermitHandler.getPermits()).toEqual(['admin']);
+      uxsPermitHandler.setPermits(['admin']);
+      expect(uxsPermitHandler.getPermits()).toEqual(['admin']);
     });
 
     it('should set permits', function() {
-      _uxsPermitHandler.setPermits(['admin']);
-      expect(_uxsPermitHandler.getPermits()).toEqual(['admin']);
+      uxsPermitHandler.setPermits(['admin']);
+      expect(uxsPermitHandler.getPermits()).toEqual(['admin']);
     });
 
     it('should set multiple permits', function() {
-      _uxsPermitHandler.setPermits(['admin', 'user']);
-      expect(_uxsPermitHandler.getPermits().length).toEqual(2);
+      uxsPermitHandler.setPermits(['admin', 'user']);
+      expect(uxsPermitHandler.getPermits().length).toEqual(2);
     });
 
     it('should broadcast event', function() {
-      spyOn(_rootScope, '$broadcast').and.callThrough();
-      _uxsPermitHandler.setPermits('admin');
-      expect(_rootScope.$broadcast).toHaveBeenCalled();
+      spyOn($rootScope, '$broadcast').and.callThrough();
+      uxsPermitHandler.setPermits('admin');
+      expect($rootScope.$broadcast).toHaveBeenCalled();
     });
   });
 
   describe('parsePermits', function() {
     it('should get empty array | empty string', function() {
-      expect(_uxsPermitHandler.parsePermits('')).toEqual([]);
+      expect(uxsPermitHandler.parsePermits('')).toEqual([]);
     });
 
     it('should get empty array | number', function() {
-      expect(_uxsPermitHandler.parsePermits(42)).toEqual([]);
+      expect(uxsPermitHandler.parsePermits(42)).toEqual([]);
     });
 
     it('should get empty array | null', function() {
-      expect(_uxsPermitHandler.parsePermits(null)).toEqual([]);
+      expect(uxsPermitHandler.parsePermits(null)).toEqual([]);
     });
 
     it('should get empty array | undefined', function() {
-      expect(_uxsPermitHandler.parsePermits(undefined)).toEqual([]);
+      expect(uxsPermitHandler.parsePermits(undefined)).toEqual([]);
     });
 
     it('should get empty array | empty array', function() {
-      expect(_uxsPermitHandler.parsePermits([])).toEqual([]);
+      expect(uxsPermitHandler.parsePermits([])).toEqual([]);
     });
 
     it('should get empty array | empty object', function() {
-      expect(_uxsPermitHandler.parsePermits({})).toEqual([]);
+      expect(uxsPermitHandler.parsePermits({})).toEqual([]);
     });
 
     it('should get empty array | object', function() {
-      expect(_uxsPermitHandler.parsePermits({answer: 42})).toEqual([]);
+      expect(uxsPermitHandler.parsePermits({answer: 42})).toEqual([]);
     });
 
     it('should get array with one item', function() {
-      expect(_uxsPermitHandler.parsePermits('admin')).toEqual(['admin']);
+      expect(uxsPermitHandler.parsePermits('admin')).toEqual(['admin']);
     });
 
     it('should get array with multiple items | string whitespaces', function() {
-      expect(_uxsPermitHandler.parsePermits('admin,user ')).toEqual(['admin', 'user']);
+      expect(uxsPermitHandler.parsePermits('admin,user ')).toEqual(['admin', 'user']);
     });
 
     it('should get array with multiple items | array', function() {
-      expect(_uxsPermitHandler.parsePermits(['admin', 'user'])).toEqual(['admin', 'user']);
+      expect(uxsPermitHandler.parsePermits(['admin', 'user'])).toEqual(['admin', 'user']);
     });
 
     it('should get array with multiple items | uppercase', function() {
-      expect(_uxsPermitHandler.parsePermits(['ADMIN', 'USER'])).toEqual(['admin', 'user']);
+      expect(uxsPermitHandler.parsePermits(['ADMIN', 'USER'])).toEqual(['admin', 'user']);
     });
   });
 });
