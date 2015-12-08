@@ -143,7 +143,12 @@
        */
       function parsePermitList(permits) {
         return permits.map(function (permit) {
-          return angular.lowercase(permit).trim() || '';
+          try {
+            permit = angular.lowercase(permit).trim();
+          } catch(error) {
+            permit = ''
+          }
+          return permit;
         });
       }
 
