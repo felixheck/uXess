@@ -1,3 +1,24 @@
+describe('uxsAuthTypeHandler configuration', function() {
+  var _uxsAuthTypeHandler;
+
+
+  beforeEach(function () {
+    angular.module('authTypeHandlerConfig', []).config(function (uxsAuthTypeHandlerProvider) {
+      uxsAuthTypeHandlerProvider.setDefaultAuthType('any');
+    });
+    module('uxs', 'authTypeHandlerConfig');
+
+  });
+
+  beforeEach(inject(function (uxsAuthTypeHandler) {
+    _uxsAuthTypeHandler = uxsAuthTypeHandler;
+  }));
+
+  it('should provide default auth type', function() {
+    expect(_uxsAuthTypeHandler.getDefaultAuthType()).toEqual('any');
+  });
+});
+
 describe('uxsAuthTypeHandler', function() {
   var _uxsAuthTypeHandler;
 

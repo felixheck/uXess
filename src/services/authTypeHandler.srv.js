@@ -9,8 +9,7 @@
 
   'use strict';
 
-  angular.module('uxs').service('uxsAuthTypeHandler', [
-    'uxsAUTH_TYPES',
+  angular.module('uxs').provider('uxsAuthTypeHandler', [
     UxsAuthTypeHandler
   ]);
 
@@ -20,90 +19,150 @@
    *
    * @description
    * Handle various authorization types
-   *
-   * @param {Object.<string, string>} uxsAUTH_TYPES Available auth types (DI)
    */
-  function UxsAuthTypeHandler(uxsAUTH_TYPES) {
-
+  function UxsAuthTypeHandler() {
     /**
-     * @type {Object}
+     * @type{string}
      * @private
      *
      * @description
-     * Store private variables in a centrally manner
+     * Provided default auth type
      */
-    var data = {
-      defaultAuthType: 'any'
-    };
+    var providedDefaultAuthType;
 
     /**
      * @function
-     * @public
+     * @private
      *
      * @description
-     * Set the default auth type
+     * Set `providedDefaultAuthType`
      *
-     * @param {string} authType Auth type to be set
+     * @param {string} authType Auth type to be provided
      */
     this.setDefaultAuthType = function setDefaultAuthType(authType) {
-      var isVerified = this.isAuthType(authType);
-      var parsedAuthType;
+      providedDefaultAuthType = authType;
+    };
 
-      if(isVerified) {
-        parsedAuthType = this.parseAuthType(authType);
-        data.defaultAuthType = parsedAuthType;
+    /**
+     * @function
+     * @public
+     *
+     * @description
+     * Public service to handle various authorization types
+     *
+     * @param {Object.<string, string>} uxsAUTH_TYPES Available auth types (DI)
+     * @returns {Object} Public interface
+     */
+    this.$get = function (uxsAUTH_TYPES) {
+      /**
+       * @type {Object}
+       * @public
+       *
+       * @description
+       * Public service interface
+       */
+      var service = {};
+
+      /**
+       * @type {Object}
+       * @private
+       *
+       * @description
+       * Store private variables in a centrally manner
+       */
+      var data = {
+        defaultAuthType: 'any'
+      };
+
+      /**
+       * @function
+       * @public
+       * @this service
+       *
+       * @description
+       * Set the default auth type
+       *
+       * @param {string} authType Auth type to be set
+       */
+      service.setDefaultAuthType = function setDefaultAuthType(authType) {
+        var isVerified = this.isAuthType(authType);
+        var parsedAuthType;
+
+        if (isVerified) {
+          parsedAuthType = this.parseAuthType(authType);
+          data.defaultAuthType = parsedAuthType;
+        }
+      };
+
+      /**
+       * @function
+       * @public
+       * @this service
+       *
+       * @description
+       * Get the default auth type
+       *
+       * @returns {string} `defaultAuthType`
+       */
+      service.getDefaultAuthType = function getDefaultAuthType() {
+        return data.defaultAuthType;
+      };
+
+      /**
+       * @function
+       * @public
+       * @this service
+       *
+       * @description
+       * Check if passed auth type is valid
+       *
+       * @param {string} authType Auth type to be checked
+       * @returns {boolean} Auth type is valid
+       */
+      service.isAuthType = function isAuthType(authType) {
+        var parsedAuthType = this.parseAuthType(authType);
+        var authTypeKeys = Object.keys(uxsAUTH_TYPES);
+
+        return authTypeKeys.indexOf(parsedAuthType) !== -1
+      };
+
+      /**
+       * @function
+       * @public
+       * @this service
+       *
+       * @description
+       * Parse passed auth type
+       *
+       * @param {string} authType Auth type to be parsed
+       * @returns {string} Parsed auth type
+       */
+      service.parseAuthType = function parseAuthType(authType) {
+        var parsedAuthType = data.defaultAuthType;
+
+        if (angular.isString(authType)) {
+          parsedAuthType = angular.lowercase(authType).trim();
+        }
+
+        return parsedAuthType;
+      };
+
+      /**
+       * @function
+       * @private
+       *
+       * @description
+       * Parse provided permits if available
+       */
+      function parseProvidedDefaultAuthType() {
+        if(providedDefaultAuthType) {
+          service.setDefaultAuthType(providedDefaultAuthType);
+        }
       }
-    };
 
-    /**
-     * @function
-     * @public
-     *
-     * @description
-     * Get the default auth type
-     *
-     * @returns {string} `defaultAuthType`
-     */
-    this.getDefaultAuthType = function getDefaultAuthType() {
-      return data.defaultAuthType;
-    };
+      parseProvidedDefaultAuthType();
 
-    /**
-     * @function
-     * @public
-     *
-     * @description
-     * Check if passed auth type is valid
-     *
-     * @param {string} authType Auth type to be checked
-     * @returns {boolean} Auth type is valid
-     */
-    this.isAuthType = function isAuthType(authType) {
-      var parsedAuthType = this.parseAuthType(authType);
-      var authTypeKeys = Object.keys(uxsAUTH_TYPES);
-
-      return authTypeKeys.indexOf(parsedAuthType) !== -1
-    };
-
-    /**
-     * @function
-     * @public
-     *
-     * @description
-     * Parse passed auth type
-     *
-     * @param {string} authType Auth type to be parsed
-     * @returns {string} Parsed auth type
-     */
-    this.parseAuthType = function parseAuthType(authType) {
-      var parsedAuthType = data.defaultAuthType;
-
-      if(angular.isString(authType)) {
-        parsedAuthType = angular.lowercase(authType).trim();
-      }
-
-      return parsedAuthType;
+      return service;
     }
   }
-
 })();

@@ -9,8 +9,7 @@
 
   'use strict';
 
-  angular.module('uxs').service('uxsPermitHandler', [
-    '$rootScope',
+  angular.module('uxs').provider('uxsPermitHandler', [
     UxsPermitHandler
   ]);
 
@@ -20,89 +19,150 @@
    *
    * @description
    * Handle permits and share data
-   *
-   * @param {Object} $rootScope Access to root scope (DI)
    */
-  function UxsPermitHandler($rootScope) {
-
+  function UxsPermitHandler() {
     /**
-     * @type {Object}
+     * @type{(Array.<?string> | string)}
      * @private
      *
      * @description
-     * Store private variables in a centrally manner
+     * Provided permits
      */
-    var data = {
-      permits: []
-    };
+    var providedPermits;
 
     /**
      * @function
-     * @public
+     * @private
      *
      * @description
-     * Parse permits to list of trimmed and transformed ones
+     * Set `providedPermits`
      *
-     * @param {(Array.<?string> | string)} permits Permits to be parsed
-     * @returns {Array.<?string>} List of permits
-     */
-    this.parsePermits = function parsePermits(permits) {
-      var parsedPermits = [];
-
-      if(permits && angular.isString(permits)) {
-        permits = permits.split(',');
-      }
-
-      if(permits && angular.isArray(permits)) {
-        parsedPermits = parsePermitList(permits);
-      }
-
-      return parsedPermits;
-    };
-
-    /**
-     * @function
-     * @public
-     *
-     * @description
-     * Get `data.permits`
-     *
-     * @returns {Array.<?string>} `data.permits`
-     */
-    this.getPermits = function getPermits() {
-      return data.permits;
-    };
-
-    /**
-     * @function
-     * @public
-     *
-     * @description
-     * Set `data.permits`
-     *
-     * @fires `uxsPermitsChanged`
-     *
-     * @param {(Array.<?string> | string)} permits Permits to be set
+     * @param {(Array.<?string> | string)} permits Permits to be provided
      */
     this.setPermits = function setPermits(permits) {
-      data.permits = this.parsePermits(permits);
-      $rootScope.$broadcast('uxsPermitsChanged');
+      providedPermits = permits;
     };
 
     /**
      * @function
-     * @private
+     * @public
      *
      * @description
-     * Parse list of permits by trimming and transforming
+     * Public service to handle permits and share data
      *
-     * @param {Array.<?string>} permits Permits to be parsed
-     * @returns {Array.<?string>} List of permits
+     * @param {Object} $rootScope Access to root scope (DI)
+     * @returns {Object} Public interface
      */
-    function parsePermitList(permits) {
-      return permits.map(function(permit) {
-        return angular.lowercase(permit).trim() || '';
-      });
+    this.$get = function($rootScope) {
+      /**
+       * @type {Object}
+       * @public
+       *
+       * @description
+       * Public service interface
+       */
+      var service = {};
+
+      /**
+       * @type {Object}
+       * @private
+       *
+       * @description
+       * Store private variables in a centrally manner
+       */
+      var data = {
+        permits: []
+      };
+
+      /**
+       * @function
+       * @public
+       * @this service
+       *
+       * @description
+       * Parse permits to list of trimmed and transformed ones
+       *
+       * @param {(Array.<?string> | string)} permits Permits to be parsed
+       * @returns {Array.<?string>} List of permits
+       */
+      service.parsePermits = function parsePermits(permits) {
+        var parsedPermits = [];
+
+        if (permits && angular.isString(permits)) {
+          permits = permits.split(',');
+        }
+
+        if (permits && angular.isArray(permits)) {
+          parsedPermits = parsePermitList(permits);
+        }
+
+        return parsedPermits;
+      };
+
+      /**
+       * @function
+       * @public
+       * @this service
+       *
+       * @description
+       * Get `data.permits`
+       *
+       * @returns {Array.<?string>} `data.permits`
+       */
+      service.getPermits = function getPermits() {
+        return data.permits;
+      };
+
+      /**
+       * @function
+       * @public
+       * @this service
+       *
+       * @description
+       * Set `data.permits`
+       *
+       * @fires `uxsPermitsChanged`
+       *
+       * @param {(Array.<?string> | string)} permits Permits to be set
+       */
+      service.setPermits = function setPermits(permits) {
+        data.permits = this.parsePermits(permits);
+        $rootScope.$broadcast('uxsPermitsChanged');
+      };
+
+      /**
+       * @function
+       * @private
+       * @this service
+       *
+       * @description
+       * Parse list of permits by trimming and transforming
+       *
+       * @param {Array.<?string>} permits Permits to be parsed
+       * @returns {Array.<?string>} List of permits
+       */
+      function parsePermitList(permits) {
+        return permits.map(function (permit) {
+          return angular.lowercase(permit).trim() || '';
+        });
+      }
+
+      /**
+       * @function
+       * @private
+       *
+       * @description
+       * Parse provided permits if available
+       */
+      function parseProvidedPermits() {
+        if(providedPermits) {
+          service.setPermits(providedPermits);
+        }
+      }
+
+      parseProvidedPermits();
+
+      return service;
     }
   }
 

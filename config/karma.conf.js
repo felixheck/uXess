@@ -27,6 +27,9 @@
         'mocha',
         'coverage'
       ],
+      mochaReporter: {
+        output: 'full'
+      },
       plugins: [
         'karma-jasmine',
         'karma-mocha-reporter',

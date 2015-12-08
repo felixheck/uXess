@@ -1,3 +1,24 @@
+describe('uxsPermitHandler configuration', function() {
+  var _uxsPermitHandler;
+
+
+  beforeEach(function () {
+    angular.module('permitHandlerConfig', []).config(function (uxsPermitHandlerProvider) {
+      uxsPermitHandlerProvider.setPermits('admin');
+    });
+    module('uxs', 'permitHandlerConfig');
+
+  });
+
+  beforeEach(inject(function (uxsPermitHandler) {
+    _uxsPermitHandler = uxsPermitHandler;
+  }));
+
+  it('should provide permits', function() {
+    expect(_uxsPermitHandler.getPermits()).toEqual(['admin']);
+  });
+});
+
 describe('uxsPermitHandler', function() {
   var _uxsPermitHandler;
   var _rootScope;
@@ -10,8 +31,10 @@ describe('uxsPermitHandler', function() {
   }));
 
   it('should inject mock factory', function() {
+    expect(_rootScope).toBeDefined();
     expect(_uxsPermitHandler).toBeDefined();
   });
+
 
   describe('setPermits | getPermits', function() {
     it('should set permits', function() {

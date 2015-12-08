@@ -9,6 +9,11 @@ describe('uxsAccessHandler', function() {
     _uxsAccessHandler = uxsAccessHandler;
   }));
 
+  it('should inject mock factory', function () {
+    expect(_uxsPermitHandler).toBeDefined();
+    expect(_uxsAccessHandler).toBeDefined();
+  });
+
   describe('hasPermits', function () {
     it('should not match', function () {
       _uxsPermitHandler.setPermits(['admin']);

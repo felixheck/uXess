@@ -102,9 +102,10 @@
         isAccessible = checkCredentials(scope, attrs);
 
         if (isAccessible) {
-          transclude(function(clone) {
+          transclude(function(clone, newScope) {
             clone.push(document.createComment(' end uxsIf '));
             cloneReference = clone;
+            newScope.$destroy();
             $animate.enter(clone, element.parent(), $element);
           });
         } else if (!isAccessible && cloneReference) {
