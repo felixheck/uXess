@@ -1,8 +1,8 @@
 {
   "name": "uxess",
-  "version": "0.0.2",
-  "description": "Client-side authorization middleware to handle ui element based on permissions",
-  "keywords": [],
+  "version": "0.1.0",
+  "description": "Generic authorization module for role-based handling of ui elements",
+  "keywords": ["angularjs", "generic", "authorization", "role", "ui", "access", "ngAnimate"],
   "author": {
     "name": "Felix Heck",
     "email": "hi@whoTheHeck.de",
@@ -43,9 +43,7 @@
     "karma-firefox-launcher": "^0.1.7",
     "karma-jasmine": "^0.3.6",
     "karma-mocha-reporter": "^1.1.1",
-    "karma-phantomjs-launcher": "^0.2.1",
     "opn-cli": "^1.0.0",
-    "phantomjs": "^1.9.18",
     "protractor": "^2.5.1"
   },
   "dependencies": {

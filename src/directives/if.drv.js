@@ -11,8 +11,8 @@
 
   angular.module('uxs').directive('uxsIf', [
     '$animate',
-    '$parse',
     '$interpolate',
+    '$parse',
     'uxsAccessHandler',
     uxsIf
   ]);
@@ -26,15 +26,25 @@
    * Handle UI elements based on permits
    *
    * @param {Object} $animate Service to animate UI elements (DI)
-   * @param {Object} $parse Service to convert expression contents (DI)
    * @param {Object} $interpolate Service to convert expressions (DI)
+   * @param {Object} $parse Service to convert expression contents (DI)
    * @param {Object.<string, Function>} uxsAccessHandler Factory to handle authorization (DI)
    * @returns {Object} Grant access to private scope
    */
-  function uxsIf($animate, $parse, $interpolate, uxsAccessHandler) {
+  function uxsIf($animate, $interpolate, $parse, uxsAccessHandler) {
 
+    /**
+     * @function
+     * @private
+     *
+     * @description
+     * Check if the attribute value matches the expression pattern
+     *
+     * @param {string} attr Attribute value to be checked for
+     * @returns {boolean} Matches the exprression pattern
+     */
     function isExpression(attr) {
-      return attr && attr.indexOf('{{') !== -1 && attr.indexOf('}}') !== -1;
+      return attr && attr.search(/{{2}.*}{2}/) !== -1;
     }
 
     /**
@@ -50,15 +60,15 @@
      */
     function extractAttribute(scope, attr) {
       var hasExpression = isExpression(attr);
-      var parsingFn = $parse;
+      var parseFn = $parse;
       var extractedAttr;
 
       if(hasExpression) {
-        parsingFn = $interpolate;
+        parseFn = $interpolate;
       }
 
       try {
-        extractedAttr = parsingFn(attr)(scope);
+        extractedAttr = parseFn(attr)(scope);
       } catch(error) {
         extractedAttr = attr;
       }
