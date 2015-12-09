@@ -143,11 +143,13 @@
        */
       function parsePermitList(permits) {
         return permits.map(function (permit) {
-          try {
+          if(permit.toString && angular.isFunction(permit.toString)) {
+            permit = permit.toString();
             permit = angular.lowercase(permit).trim();
-          } catch(error) {
-            permit = ''
+          } else {
+            permit = '';
           }
+
           return permit;
         });
       }

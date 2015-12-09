@@ -96,7 +96,7 @@ describe('uxsPermitHandler', function() {
     });
 
     it('should get array with multiple items | numbers', function() {
-      expect(uxsPermitHandler.parsePermits([42, 42])).toEqual(['', '']);
+      expect(uxsPermitHandler.parsePermits([42, 42])).toEqual(['42', '42']);
     });
 
     it('should get array with multiple items | array', function() {
