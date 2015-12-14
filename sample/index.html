@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>uXess Sample</title>
+    <link href="styles.css" rel="stylesheet">
+</head>
+<body ng-app="uXessSample">
+    <main ng-controller="SampleCtrl as sample">
+        <div class="inner">
+            <header>
+                <strong>Roles:</strong>
+                <label>
+                    <input type="checkbox" name="user" value="user"
+                           ng-model="sample.roles.user" ng-change="sample.changePermits()">
+                    User
+                </label>
+                <label>
+                    <input type="checkbox" name="editor" value="editor"
+                           ng-model="sample.roles.editor" ng-change="sample.changePermits()">
+                    Editor
+                </label>
+                <label>
+                    <input type="checkbox" name="admin" value="admin"
+                           ng-model="sample.roles.admin" ng-change="sample.changePermits()">
+                    Admin
+                </label>
+            </header>
+            <section>
+                <p>
+                    Roles don't matter: <button>Button</button>
+                </p>
+                <p>
+                    Has any role: <button uxs-if="user, editor, admin" ng-cloak>Button</button>
+                </p>
+                <p>
+                    Has all roles: <button uxs-if="user, editor, admin" data-uxs-type="all" ng-cloak>Button</button>
+                </p>
+                <p>
+                    Isn't an admin: <button uxs-if="admin" data-uxs-type="none" ng-cloak>Button</button>
+                </p>
+            </section>
+        </div>
+    </main>
+
+    <script src="../node_modules/angular/angular.js"></script>
+    <script src="../node_modules/angular-animate/angular-animate.min.js"></script>
+    <script src="../dist/uxess.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

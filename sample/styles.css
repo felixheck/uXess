@@ -1,0 +1,56 @@
+*,
+*:before,
+*:after {
+    padding: 0;
+    margin: 0;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+}
+
+[ng-cloak],
+[data-ng-cloak],
+[x-ng-cloak],
+.ng-cloak,
+.x-ng-cloak {
+    display: none !important;
+}
+
+html,
+body {
+    height: 100%;
+    width: 100%;
+}
+
+body {
+    display: table;
+}
+
+main {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+main .inner {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid black;
+}
+
+main header {
+    padding: 0 0 20px;
+    border-bottom: 1px solid black;
+    margin: 0 0 15px;
+}
+
+main p {
+    padding: 5px 0;
+}
+
+main label {
+    margin: 0 0 0 20px;
+}
