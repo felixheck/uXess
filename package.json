@@ -37,7 +37,7 @@
     "build": "node config/buildify.conf.js dist:build",
     "watch:dist": "gacher -p 'src/**/*.js' -c 'npm run build:dist'",
     "selenium": "webdriver-manager start",
-    "http": "http-server ./ -p 8081 -o sample",
+    "http": "http-server ./ -p 8080 -o sample",
     "protractor": "protractor config/protractor.conf.js"
   },
   "devDependencies": {
