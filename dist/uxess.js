@@ -28,7 +28,7 @@
     'uxsAUTH_TYPES',
     'uxsAuthTypeHandler',
     'uxsPermitHandler',
-    AccessHandler
+    UxsAccessHandler
   ]);
 
   /**
@@ -40,9 +40,9 @@
    *
    * @param {Object.<string, string>} uxsAUTH_TYPES Available auth types (DI)
    * @param {Object.<string, Function>} uxsAuthTypeHandler Factory to handle auth types (DI)
-   * @param {Object.<string, Function>} uxsPermitHandler Factory to handle access (DI)
+   * @param {Object.<string, Function>} uxsPermitHandler Factory to handle permits (DI)
    */
-  function AccessHandler(uxsAUTH_TYPES, uxsAuthTypeHandler, uxsPermitHandler) {
+  function UxsAccessHandler(uxsAUTH_TYPES, uxsAuthTypeHandler, uxsPermitHandler) {
     /**
      * @function
      * @public
@@ -54,7 +54,7 @@
      * @returns {boolean} All passed permits are set
      */
     this.hasPermits = function hasPermits(permits) {
-      var parsedPermits = this.parsePermits(permits);
+      var parsedPermits = uxsPermitHandler.parsePermits(permits);
 
       return parsedPermits.every(inspectPermits);
     };
@@ -70,7 +70,7 @@
      * @returns {boolean} Any of passed permits is set
      */
     this.hasAnyPermits = function hasAnyPermits(permits) {
-      var parsedPermits = this.parsePermits(permits);
+      var parsedPermits = uxsPermitHandler.parsePermits(permits);
 
       return parsedPermits.some(inspectPermits);
     };
@@ -135,9 +135,8 @@
 
   'use strict';
 
-  angular.module('uxs').service('uxsAuthTypeHandler', [
-    'uxsAUTH_TYPES',
-    AuthTypeHandler
+  angular.module('uxs').provider('uxsAuthTypeHandler', [
+    UxsAuthTypeHandler
   ]);
 
   /**
@@ -146,92 +145,152 @@
    *
    * @description
    * Handle various authorization types
-   *
-   * @param {Object.<string, string>} uxsAUTH_TYPES Available auth types (DI)
    */
-  function AuthTypeHandler(uxsAUTH_TYPES) {
-
+  function UxsAuthTypeHandler() {
     /**
-     * @type {Object}
+     * @type{string}
      * @private
      *
      * @description
-     * Store private variables in a centrally manner
+     * Provided default auth type
      */
-    var data = {
-      defaultAuthType:'any'
-    };
+    var providedDefaultAuthType;
 
     /**
      * @function
-     * @public
+     * @private
      *
      * @description
-     * Set the default auth type
+     * Set `providedDefaultAuthType`
      *
-     * @param {string} authType Auth type to be set
+     * @param {string} authType Auth type to be provided
      */
     this.setDefaultAuthType = function setDefaultAuthType(authType) {
-      var isVerified = this.isAuthType(authType);
-      var parsedAuthType;
+      providedDefaultAuthType = authType;
+    };
 
-      if(isVerified) {
-        parsedAuthType = this.parseAuthType(authType);
-        data.defaultAuthType = parsedAuthType;
+    /**
+     * @function
+     * @public
+     *
+     * @description
+     * Public service to handle various authorization types
+     *
+     * @param {Object.<string, string>} uxsAUTH_TYPES Available auth types (DI)
+     * @returns {Object} Public interface
+     */
+    this.$get = function (uxsAUTH_TYPES) {
+      /**
+       * @type {Object}
+       * @public
+       *
+       * @description
+       * Public service interface
+       */
+      var service = {};
+
+      /**
+       * @type {Object}
+       * @private
+       *
+       * @description
+       * Store private variables in a centrally manner
+       */
+      var data = {
+        defaultAuthType: 'any'
+      };
+
+      /**
+       * @function
+       * @public
+       * @this service
+       *
+       * @description
+       * Set the default auth type
+       *
+       * @param {string} authType Auth type to be set
+       */
+      service.setDefaultAuthType = function setDefaultAuthType(authType) {
+        var isVerified = this.isAuthType(authType);
+        var parsedAuthType;
+
+        if (isVerified) {
+          parsedAuthType = this.parseAuthType(authType);
+          data.defaultAuthType = parsedAuthType;
+        }
+      };
+
+      /**
+       * @function
+       * @public
+       * @this service
+       *
+       * @description
+       * Get the default auth type
+       *
+       * @returns {string} `defaultAuthType`
+       */
+      service.getDefaultAuthType = function getDefaultAuthType() {
+        return data.defaultAuthType;
+      };
+
+      /**
+       * @function
+       * @public
+       * @this service
+       *
+       * @description
+       * Check if passed auth type is valid
+       *
+       * @param {string} authType Auth type to be checked
+       * @returns {boolean} Auth type is valid
+       */
+      service.isAuthType = function isAuthType(authType) {
+        var parsedAuthType = this.parseAuthType(authType);
+        var authTypeKeys = Object.keys(uxsAUTH_TYPES);
+
+        return authTypeKeys.indexOf(parsedAuthType) !== -1
+      };
+
+      /**
+       * @function
+       * @public
+       * @this service
+       *
+       * @description
+       * Parse passed auth type
+       *
+       * @param {string} authType Auth type to be parsed
+       * @returns {string} Parsed auth type
+       */
+      service.parseAuthType = function parseAuthType(authType) {
+        var parsedAuthType = data.defaultAuthType;
+
+        if (angular.isString(authType)) {
+          parsedAuthType = angular.lowercase(authType).trim();
+        }
+
+        return parsedAuthType;
+      };
+
+      /**
+       * @function
+       * @private
+       *
+       * @description
+       * Parse provided permits if available
+       */
+      function parseProvidedDefaultAuthType() {
+        if(providedDefaultAuthType) {
+          service.setDefaultAuthType(providedDefaultAuthType);
+        }
       }
-    };
 
-    /**
-     * @function
-     * @public
-     *
-     * @description
-     * Get the default auth type
-     *
-     * @returns {string} `defaultAuthType`
-     */
-    this.getDefaultAuthType = function getDefaultAuthType() {
-      return data.defaultAuthType;
-    };
+      parseProvidedDefaultAuthType();
 
-    /**
-     * @function
-     * @public
-     *
-     * @description
-     * Check if passed auth type is valid
-     *
-     * @param {string} authType Auth type to be checked
-     * @returns {boolean} Auth type is valid
-     */
-    this.isAuthType = function isAuthType(authType) {
-      var parsedAuthType = this.parseAuthType(authType);
-      var authTypeKeys = Object.keys(uxsAUTH_TYPES);
-
-      return authTypeKeys.indexOf(parsedAuthType) !== -1
-    };
-
-    /**
-     * @function
-     * @public
-     *
-     * @description
-     * Parse passed auth type
-     *
-     * @param {string} authType Auth type to be parsed
-     * @returns {string} Parsed auth type
-     */
-    this.parseAuthType = function parseAuthType(authType) {
-      var parsedAuthType = data.defaultAuthType;
-
-      if(angular.isString(authType)) {
-        parsedAuthType = angular.lowercase(authType).trim();
-      }
-
-      return parsedAuthType;
+      return service;
     }
   }
-
 })();
 
 /*!
@@ -263,9 +322,8 @@
 
   'use strict';
 
-  angular.module('uxs').service('uxsPermitHandler', [
-    '$rootScope',
-    PermitHandler
+  angular.module('uxs').provider('uxsPermitHandler', [
+    UxsPermitHandler
   ]);
 
   /**
@@ -274,89 +332,157 @@
    *
    * @description
    * Handle permits and share data
-   *
-   * @param {Object} $rootScope Access to root scope (DI)
    */
-  function PermitHandler($rootScope) {
-
+  function UxsPermitHandler() {
     /**
-     * @type {Object}
+     * @type{(Array.<?string> | string)}
      * @private
      *
      * @description
-     * Store private variables in a centrally manner
+     * Provided permits
      */
-    var data = {
-      permits: []
-    };
+    var providedPermits;
 
     /**
      * @function
-     * @public
+     * @private
      *
      * @description
-     * Parse permits to list of trimmed and transformed ones
+     * Set `providedPermits`
      *
-     * @param {(Array.<?string> | string)} permits Permits to be parsed
-     * @returns {Array.<?string>} List of permits
-     */
-    this.parsePermits = function parsePermits(permits) {
-      var parsedPermits = [];
-
-      if(permits && angular.isString(permits)) {
-        permits = permits.split(',');
-      }
-
-      if(permits && angular.isArray(permits)) {
-        parsedPermits = parsePermitList(permits);
-      }
-
-      return parsedPermits;
-    };
-
-    /**
-     * @function
-     * @public
-     *
-     * @description
-     * Get `data.permits`
-     *
-     * @returns {Array.<?string>} `data.permits`
-     */
-    this.getPermits = function getPermits() {
-      return data.permits;
-    };
-
-    /**
-     * @function
-     * @public
-     *
-     * @description
-     * Set `data.permits`
-     *
-     * @fires `uxsPermitsChanged`
-     *
-     * @param {(Array.<?string> | string)} permits Permits to be set
+     * @param {(Array.<?string> | string)} permits Permits to be provided
      */
     this.setPermits = function setPermits(permits) {
-      data.permits = this.parsePermits(permits);
-      $rootScope.$broadcast('uxsPermitsChanged');
+      providedPermits = permits;
     };
 
     /**
      * @function
-     * @private
+     * @public
      *
      * @description
-     * Parse list of permits by trimming and transforming
+     * Public service to handle permits and share data
      *
-     * @param {Array.<?string>} permits Permits to be parsed
-     * @returns {Array.<?string>} List of permits
+     * @param {Object} $rootScope Access to root scope (DI)
+     * @returns {Object} Public interface
      */
-    function parsePermitList(permits) {
-      return permits.map(function(permit) {
-        return angular.lowercase(permit).trim() || '';
-      });
+    this.$get = function($rootScope) {
+      /**
+       * @type {Object}
+       * @public
+       *
+       * @description
+       * Public service interface
+       */
+      var service = {};
+
+      /**
+       * @type {Object}
+       * @private
+       *
+       * @description
+       * Store private variables in a centrally manner
+       */
+      var data = {
+        permits: []
+      };
+
+      /**
+       * @function
+       * @public
+       * @this service
+       *
+       * @description
+       * Parse permits to list of trimmed and transformed ones
+       *
+       * @param {(Array.<?string> | string)} permits Permits to be parsed
+       * @returns {Array.<?string>} List of permits
+       */
+      service.parsePermits = function parsePermits(permits) {
+        var parsedPermits = [];
+
+        if (permits && angular.isString(permits)) {
+          permits = permits.split(',');
+        }
+
+        if (permits && angular.isArray(permits)) {
+          parsedPermits = parsePermitList(permits);
+        }
+
+        return parsedPermits;
+      };
+
+      /**
+       * @function
+       * @public
+       * @this service
+       *
+       * @description
+       * Get `data.permits`
+       *
+       * @returns {Array.<?string>} `data.permits`
+       */
+      service.getPermits = function getPermits() {
+        return data.permits;
+      };
+
+      /**
+       * @function
+       * @public
+       * @this service
+       *
+       * @description
+       * Set `data.permits`
+       *
+       * @fires `uxsPermitsChanged`
+       *
+       * @param {(Array.<?string> | string)} permits Permits to be set
+       */
+      service.setPermits = function setPermits(permits) {
+        data.permits = this.parsePermits(permits);
+        $rootScope.$broadcast('uxsPermitsChanged');
+      };
+
+      /**
+       * @function
+       * @private
+       * @this service
+       *
+       * @description
+       * Parse list of permits by trimming and transforming
+       *
+       * @param {Array.<?string>} permits Permits to be parsed
+       * @returns {Array.<?string>} List of permits
+       */
+      function parsePermitList(permits) {
+        return permits.map(function (permit) {
+          try {
+            permit = permit.toString();
+            permit = angular.lowercase(permit).trim();
+          } catch(error) {
+            permit = '';
+          }
+
+          return permit;
+        });
+      }
+
+      /**
+       * @function
+       * @private
+       *
+       * @description
+       * Parse provided permits if available
+       */
+      function parseProvidedPermits() {
+        if(providedPermits) {
+          service.setPermits(providedPermits);
+        }
+      }
+
+      parseProvidedPermits();
+
+      return service;
     }
   }
 
@@ -373,9 +499,11 @@
 
   'use strict';
 
-  angular.module('uxess').directive('uxsIf', [
+  angular.module('uxs').directive('uxsIf', [
     '$animate',
-    'PermitHandler',
+    '$interpolate',
+    '$parse',
+    'uxsAccessHandler',
     uxsIf
   ]);
 
@@ -388,10 +516,73 @@
    * Handle UI elements based on permits
    *
    * @param {Object} $animate Service to animate UI elements (DI)
-   * @param {Object.<string, Function>} PermitHandler Factory to handle permits (DI)
+   * @param {Object} $interpolate Service to convert expressions (DI)
+   * @param {Object} $parse Service to convert expression contents (DI)
+   * @param {Object.<string, Function>} uxsAccessHandler Factory to handle authorization (DI)
    * @returns {Object} Grant access to private scope
    */
-  function uxsIf($animate, PermitHandler) {
+  function uxsIf($animate, $interpolate, $parse, uxsAccessHandler) {
+
+    /**
+     * @function
+     * @private
+     *
+     * @description
+     * Check if the attribute value matches the expression pattern
+     *
+     * @param {string} attr Attribute value to be checked for
+     * @returns {boolean} Matches the exprression pattern
+     */
+    function isExpression(attr) {
+      return attr && attr.search(/{{2}.*}{2}/) !== -1;
+    }
+
+    /**
+     * @function
+     * @private
+     *
+     * @description
+     * Extract the attribute's value by parsing or taking over
+     *
+     * @param {Object} scope Current scope context
+     * @param {string} attr Attribute's value
+     * @returns {Array.<?string> | string} Extracted attribute's value
+     */
+    function extractAttribute(scope, attr) {
+      var hasExpression = isExpression(attr);
+      var parseFn = $parse;
+      var extractedAttr;
+
+      if(hasExpression) {
+        parseFn = $interpolate;
+      }
+
+      try {
+        extractedAttr = parseFn(attr)(scope);
+      } catch(error) {
+        extractedAttr = attr;
+      }
+
+      return extractedAttr || attr;
+    }
+
+    /**
+     * @function
+     * @private
+     *
+     * @description
+     * Check if the user meets the required permits and the auth type
+     *
+     * @param {Object} scope Current scope context
+     * @param {Object} attrs The HTML elements attributes
+     * @returns {boolean} If the user credentials are acceptable
+     */
+    function checkCredentials(scope, attrs) {
+      var permits = extractAttribute(scope, attrs.uxsIf);
+      var authType = extractAttribute(scope, attrs.uxsType);
+
+      return uxsAccessHandler.isPermitted(permits, authType);
+    }
 
     /**
      * @function
@@ -409,16 +600,47 @@
      * @param {Function} transclude Transclude linking function
      */
     function link(scope, element, attrs, ctrl, transclude) {
-      var isAccessible = PermitHandler.isPermitted(attrs.uxsIf, attrs.uxsType);
+      var isAccessible;
+      var childScope;
+      var cloneReference;
 
-      if(isAccessible) {
-        $animate.enter();
-      } else {
-        $animate.leave();
+      /**
+       * @function
+       * @private
+       *
+       * @description
+       * Show or hide element based on credentials
+       */
+      function checkVisibility() {
+        isAccessible = checkCredentials(scope, attrs);
+
+        if (isAccessible) {
+          if(!childScope) {
+            transclude(function (clone, newScope) {
+              childScope = newScope;
+              clone.push(document.createComment(' end uxsIf '));
+              cloneReference = clone;
+              $animate.enter(clone, element.parent(), element);
+            });
+          }
+        } else {
+          if(childScope) {
+            childScope.$destroy();
+            childScope = null;
+          }
+          if(cloneReference) {
+            $animate.leave(cloneReference);
+            cloneReference = null;
+          }
+        }
       }
 
-      angular.noop();
-      scope.$on('uxsPermitsChanged', angular.noop);
+      checkVisibility();
+      scope.$on('uxsPermitsChanged', checkVisibility);
+    }
+
+    function compile(element, attr) {
+      attr.$set('ngCloak', 'true');
     }
 
     return {

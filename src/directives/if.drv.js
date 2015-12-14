@@ -111,6 +111,7 @@
      */
     function link(scope, element, attrs, ctrl, transclude) {
       var isAccessible;
+      var childScope;
       var cloneReference;
 
       /**
@@ -124,15 +125,23 @@
         isAccessible = checkCredentials(scope, attrs);
 
         if (isAccessible) {
-          transclude(function(clone, newScope) {
-            clone.push(document.createComment(' end uxsIf '));
-            cloneReference = clone;
-            newScope.$destroy();
-            $animate.enter(clone, element.parent(), element);
-          });
-        } else if (!isAccessible && cloneReference) {
-          $animate.leave(cloneReference);
-          cloneReference = null;
+          if(!childScope) {
+            transclude(function (clone, newScope) {
+              childScope = newScope;
+              clone.push(document.createComment(' end uxsIf '));
+              cloneReference = clone;
+              $animate.enter(clone, element.parent(), element);
+            });
+          }
+        } else {
+          if(childScope) {
+            childScope.$destroy();
+            childScope = null;
+          }
+          if(cloneReference) {
+            $animate.leave(cloneReference);
+            cloneReference = null;
+          }
         }
       }
 
