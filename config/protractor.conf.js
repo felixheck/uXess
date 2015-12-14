@@ -5,13 +5,20 @@
   exports.config = {
     seleniumAddress: 'http://localhost:4444/wd/hub',
     specs: [
-      '../test/e2e/index.spec.js'
+      '../test/e2e/*.spec.js'
     ],
-    capabilities: {
-      browserName: 'chrome',
-      name: 'E2E Testing',
-      logName: 'Chrome'
-    },
+    multiCapabilities: [
+      {
+        browserName: 'chrome',
+        name: 'E2E Testing - Chrome',
+        logName: 'Chrome'
+      },
+      {
+        browserName: 'firefox',
+        name: 'E2E Testing - Firefox',
+        logName: 'Firefox'
+      }
+    ],
     onPrepare: function() {
       var SpecReporter = require('jasmine-spec-reporter');
       jasmine.getEnv().addReporter(new SpecReporter({

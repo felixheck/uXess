@@ -31,13 +31,13 @@
                     Roles don't matter: <button>Button</button>
                 </p>
                 <p>
-                    Has any role: <button uxs-if="user, editor, admin" ng-cloak>Button</button>
+                    Has any role: <button id="any" uxs-if="user, editor, admin" data-uxs-type="any" ng-cloak>Button</button>
                 </p>
                 <p>
-                    Has all roles: <button uxs-if="user, editor, admin" data-uxs-type="all" ng-cloak>Button</button>
+                    Has all roles: <button id="all" uxs-if="user, editor, admin" ng-cloak>Button</button>
                 </p>
                 <p>
-                    Isn't an admin: <button uxs-if="admin" data-uxs-type="none" ng-cloak>Button</button>
+                    Isn't an admin: <button id="none" uxs-if="admin" data-uxs-type="none" ng-cloak>Button</button>
                 </p>
             </section>
         </div>
