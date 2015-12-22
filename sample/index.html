@@ -5,24 +5,24 @@
     <title>uXess Sample</title>
     <link href="styles.css" rel="stylesheet">
 </head>
-<body ng-app="uXessSample">
-    <main ng-controller="SampleCtrl as sample">
+<body data-ng-app="uXessSample">
+    <main data-ng-controller="SampleCtrl as sample">
         <div class="inner">
             <header>
                 <strong>Roles:</strong>
                 <label>
                     <input type="checkbox" name="user" value="user"
-                           ng-model="sample.roles.user" ng-change="sample.changePermits()">
+                           data-ng-model="sample.roles.user" data-ng-change="sample.changePermits()">
                     User
                 </label>
                 <label>
                     <input type="checkbox" name="editor" value="editor"
-                           ng-model="sample.roles.editor" ng-change="sample.changePermits()">
+                           data-ng-model="sample.roles.editor" data-ng-change="sample.changePermits()">
                     Editor
                 </label>
                 <label>
                     <input type="checkbox" name="admin" value="admin"
-                           ng-model="sample.roles.admin" ng-change="sample.changePermits()">
+                           data-ng-model="sample.roles.admin" data-ng-change="sample.changePermits()">
                     Admin
                 </label>
             </header>
@@ -31,13 +31,13 @@
                     Roles don't matter: <button>Button</button>
                 </p>
                 <p>
-                    Has any role: <button id="any" uxs-if="user, editor, admin" data-uxs-type="any" ng-cloak>Button</button>
+                    Has any role: <button id="any" data-uxs-if="user, editor, admin" data-uxs-type="any" data-ng-cloak>Button</button>
                 </p>
                 <p>
-                    Has all roles: <button id="all" uxs-if="user, editor, admin" ng-cloak>Button</button>
+                    Has all roles: <button id="all" data-uxs-if="user, editor, admin" data-ng-cloak>Button</button>
                 </p>
                 <p>
-                    Isn't an admin: <button id="none" uxs-if="admin" data-uxs-type="none" ng-cloak>Button</button>
+                    Isn't an admin: <button id="none" data-uxs-if="admin" data-uxs-type="none" data-ng-cloak>Button</button>
                 </p>
             </section>
         </div>
