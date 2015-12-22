@@ -29,7 +29,6 @@
   "scripts": {
     "start": "npm run watch:dist",
     "test": "npm run test:unit",
-    "serve": "npm run selenium",
     "cover": "opn test/coverage/index.html --no-wait -- 'google chrome'",
     "sample": "opn sample/index.html --no-wait -- 'google chrome'",
     "test:unit": "karma start ./config/karma.conf.js",
