@@ -28,11 +28,11 @@
      * @description
      * Provided permits
      */
-    var providedPermits;
+    var _providedPermits;
 
     /**
      * @function
-     * @private
+     * @public
      *
      * @description
      * Set `providedPermits`
@@ -40,7 +40,7 @@
      * @param {(Array.<?string> | string)} permits Permits to be provided
      */
     this.setPermits = function setPermits(permits) {
-      providedPermits = permits;
+      _providedPermits = permits;
     };
 
     /**
@@ -70,7 +70,7 @@
        * @description
        * Store private variables in a centrally manner
        */
-      var data = {
+      var _data = {
         permits: []
       };
 
@@ -93,7 +93,7 @@
         }
 
         if (permits && angular.isArray(permits)) {
-          parsedPermits = parsePermitList(permits);
+          parsedPermits = _parsePermitList(permits);
         }
 
         return parsedPermits;
@@ -105,12 +105,12 @@
        * @this service
        *
        * @description
-       * Get `data.permits`
+       * Get `_data.permits`
        *
-       * @returns {Array.<?string>} `data.permits`
+       * @returns {Array.<?string>} `_data.permits`
        */
       service.getPermits = function getPermits() {
-        return data.permits;
+        return _data.permits;
       };
 
       /**
@@ -119,14 +119,14 @@
        * @this service
        *
        * @description
-       * Set `data.permits`
+       * Set `_data.permits`
        *
        * @fires `uxsPermitsChanged`
        *
        * @param {(Array.<?string> | string)} permits Permits to be set
        */
       service.setPermits = function setPermits(permits) {
-        data.permits = this.parsePermits(permits);
+        _data.permits = this.parsePermits(permits);
         $rootScope.$broadcast('uxsPermitsChanged');
       };
 
@@ -141,7 +141,7 @@
        * @param {Array.<?string>} permits Permits to be parsed
        * @returns {Array.<?string>} List of permits
        */
-      function parsePermitList(permits) {
+      function _parsePermitList(permits) {
         return permits.map(function (permit) {
           try {
             permit = permit.toString();
@@ -161,13 +161,13 @@
        * @description
        * Parse provided permits if available
        */
-      function parseProvidedPermits() {
-        if(providedPermits) {
-          service.setPermits(providedPermits);
+      function _parseProvidedPermits() {
+        if(_providedPermits) {
+          service.setPermits(_providedPermits);
         }
       }
 
-      parseProvidedPermits();
+      _parseProvidedPermits();
 
       return service;
     }

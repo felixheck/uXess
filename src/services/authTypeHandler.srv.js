@@ -28,11 +28,11 @@
      * @description
      * Provided default auth type
      */
-    var providedDefaultAuthType;
+    var _providedDefaultAuthType;
 
     /**
      * @function
-     * @private
+     * @public
      *
      * @description
      * Set `providedDefaultAuthType`
@@ -40,7 +40,7 @@
      * @param {string} authType Auth type to be provided
      */
     this.setDefaultAuthType = function setDefaultAuthType(authType) {
-      providedDefaultAuthType = authType;
+      _providedDefaultAuthType = authType;
     };
 
     /**
@@ -70,7 +70,7 @@
        * @description
        * Store private variables in a centrally manner
        */
-      var data = {
+      var _data = {
         defaultAuthType: 'any'
       };
 
@@ -80,7 +80,7 @@
        * @this service
        *
        * @description
-       * Set the default auth type
+       * Set `_data.defaultAuthType`
        *
        * @param {string} authType Auth type to be set
        */
@@ -90,7 +90,7 @@
 
         if (isVerified) {
           parsedAuthType = this.parseAuthType(authType);
-          data.defaultAuthType = parsedAuthType;
+          _data.defaultAuthType = parsedAuthType;
         }
       };
 
@@ -100,12 +100,12 @@
        * @this service
        *
        * @description
-       * Get the default auth type
+       * Set `_data.defaultAuthType`
        *
-       * @returns {string} `defaultAuthType`
+       * @returns {string} `_data.defaultAuthType`
        */
       service.getDefaultAuthType = function getDefaultAuthType() {
-        return data.defaultAuthType;
+        return _data.defaultAuthType;
       };
 
       /**
@@ -138,7 +138,7 @@
        * @returns {string} Parsed auth type
        */
       service.parseAuthType = function parseAuthType(authType) {
-        var parsedAuthType = data.defaultAuthType;
+        var parsedAuthType = _data.defaultAuthType;
 
         if (angular.isString(authType)) {
           parsedAuthType = angular.lowercase(authType).trim();
@@ -154,13 +154,13 @@
        * @description
        * Parse provided permits if available
        */
-      function parseProvidedDefaultAuthType() {
-        if(providedDefaultAuthType) {
-          service.setDefaultAuthType(providedDefaultAuthType);
+      function _parseProvidedDefaultAuthType() {
+        if(_providedDefaultAuthType) {
+          service.setDefaultAuthType(_providedDefaultAuthType);
         }
       }
 
-      parseProvidedDefaultAuthType();
+      _parseProvidedDefaultAuthType();
 
       return service;
     }
