@@ -563,7 +563,7 @@
      * @returns {Object} Comment node
      */
     function getCommentNode(attrs) {
-      document.createComment(' end uxsIf: ' + attrs.uxsIf + ' ')
+      return document.createComment(' end uxsIf: ' + attrs.uxsIf + ' ');
     }
 
     /**
