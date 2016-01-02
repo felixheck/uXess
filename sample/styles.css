@@ -23,6 +23,7 @@ html,
 body {
     height: 100%;
     width: 100%;
+    font-size: 20px;
 }
 
 body {
@@ -35,22 +36,29 @@ main {
 }
 
 main .inner {
-    max-width: 400px;
+    max-width: 20rem;
     margin: 0 auto;
-    padding: 20px;
-    border: 1px solid black;
+    padding: 1rem;
+    border: .05rem solid black;
 }
 
 main header {
-    padding: 0 0 20px;
-    border-bottom: 1px solid black;
-    margin: 0 0 15px;
+    padding: 0 0 1rem;
+    border-bottom: .05rem solid black;
+    margin: 0 0 .75rem;
 }
 
 main p {
-    padding: 5px 0;
+    padding: .25rem 0;
 }
 
 main label {
-    margin: 0 0 0 20px;
+    margin: 0 0 0 1rem;
+}
+
+main button {
+    padding: .05rem .3rem .1rem;
+    border-radius: 0;
+    border: .05rem solid;
+    background: white;
 }
