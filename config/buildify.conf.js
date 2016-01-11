@@ -3,33 +3,37 @@
   'use strict';
 
   /**
-   * Module dependencies
-   *
    * @private
+   *
+   * @description
+   * Module dependencies
    */
   var buildify = require('buildify');
   var fs = require('fs');
 
   /**
-   * Path to root directory of the project
-   *
-   * @private
    * @type {string}
+   * @private
+   *
+   * @description
+   * Path to root directory of the project
    */
   var root = __dirname + '/../';
 
   /**
-   * Object containing all tasks
-   *
-   * @private
    * @type {Object.<Function>}
+   * @private
+   *
+   * @description
+   * Object containing all tasks
    */
   var tasks = {
     /**
-     * Concat files to one distributional file
-     *
+     * @function
      * @private
-     * @type {Function}
+     *
+     * @description
+     * Concat files to one distributional file
      */
     distConcat: function distConcat() {
       buildify()
@@ -42,10 +46,11 @@
     },
 
     /**
-     * Minify distributional file
-     *
+     * @function
      * @private
-     * @type {Function}
+     *
+     * @description
+     * Minify distributional file
      */
     distMinify: function distMinify() {
       buildify()
@@ -56,9 +61,11 @@
   };
 
   /**
-   * Get all direct files in a list of directories
-   *
+   * @function
    * @private
+   *
+   * @description
+   * Get all direct files in a list of directories
    *
    * @param {Array.<string>} directories List of directories
    * @returns {Array.<string>} List of all files in these directories
@@ -74,9 +81,11 @@
   }
 
   /**
-   * Get all direct files in a directory
-   *
+   * @function
    * @private
+   *
+   * @description
+   * Get all direct files in a directory
    *
    * @param {string} directory Directory to be searched for
    * @returns {Array.<string>} List of all files in this directory
@@ -99,6 +108,9 @@
   }
 
   /**
+   * @public
+   *
+   * @description
    * Buildify tasks and dependencies
    */
   buildify.task({
