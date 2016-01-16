@@ -9,7 +9,7 @@
 
   'use strict';
 
-  angular.module('uxs', []);
+  angular.module('uxs', ['ngAnimate']);
 
 })();
 
@@ -124,6 +124,7 @@
   }
 
 })();
+
 /*!
  * @author Felix Heck <hi@whoTheHeck.de>
  * @version 0.0.1
@@ -311,6 +312,7 @@
   });
 
 })();
+
 /*!
  * @author Felix Heck <hi@whoTheHeck.de>
  * @version 0.0.1

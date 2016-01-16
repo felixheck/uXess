@@ -9,6 +9,8 @@
 
   'use strict';
 
-  angular.module('uxs', []);
+  angular.module('uxs', [
+    'ngAnimate'
+  ]);
 
 })();
