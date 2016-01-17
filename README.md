@@ -1,5 +1,5 @@
 # uXess
-### Client-side authorization middleware to handle ui element based on permissions
+### Generic authorization module for role-based handling of ui elements
 ---
 
 1. [Introduction](#introduction)
