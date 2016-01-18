@@ -41,11 +41,6 @@ describe('uxsPermitHandler', function() {
       expect(uxsPermitHandler.getPermits()).toEqual(['admin']);
     });
 
-    it('should set permits', function() {
-      uxsPermitHandler.setPermits(['admin']);
-      expect(uxsPermitHandler.getPermits()).toEqual(['admin']);
-    });
-
     it('should set multiple permits', function() {
       uxsPermitHandler.setPermits(['admin', 'user']);
       expect(uxsPermitHandler.getPermits().length).toEqual(2);
