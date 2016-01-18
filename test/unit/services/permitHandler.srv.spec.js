@@ -1,15 +1,15 @@
 describe('uxsPermitHandler configuration', function() {
   var uxsPermitHandler;
 
-  beforeEach(function () {
-    angular.module('permitHandlerConfig', []).config(function (uxsPermitHandlerProvider) {
+  beforeEach(function() {
+    angular.module('permitHandlerConfig', []).config(function(uxsPermitHandlerProvider) {
       uxsPermitHandlerProvider.setPermits('admin');
     });
     module('uxs', 'permitHandlerConfig');
 
   });
 
-  beforeEach(inject(function (_uxsPermitHandler_) {
+  beforeEach(inject(function(_uxsPermitHandler_) {
     uxsPermitHandler = _uxsPermitHandler_;
   }));
 

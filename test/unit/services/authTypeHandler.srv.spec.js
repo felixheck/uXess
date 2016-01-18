@@ -1,15 +1,15 @@
 describe('uxsAuthTypeHandler configuration', function() {
   var uxsAuthTypeHandler;
 
-  beforeEach(function () {
-    angular.module('authTypeHandlerConfig', []).config(function (uxsAuthTypeHandlerProvider) {
+  beforeEach(function() {
+    angular.module('authTypeHandlerConfig', []).config(function(uxsAuthTypeHandlerProvider) {
       uxsAuthTypeHandlerProvider.setDefaultAuthType('any');
     });
     module('uxs', 'authTypeHandlerConfig');
 
   });
 
-  beforeEach(inject(function (_uxsAuthTypeHandler_) {
+  beforeEach(inject(function(_uxsAuthTypeHandler_) {
     uxsAuthTypeHandler = _uxsAuthTypeHandler_;
   }));
 
@@ -23,11 +23,11 @@ describe('uxsAuthTypeHandler', function() {
 
   beforeEach(module('uxs'));
 
-  beforeEach(inject(function (_uxsAuthTypeHandler_) {
+  beforeEach(inject(function(_uxsAuthTypeHandler_) {
     uxsAuthTypeHandler = _uxsAuthTypeHandler_;
   }));
 
-  it('should inject mock factory', function () {
+  it('should inject mock factory', function() {
     expect(uxsAuthTypeHandler).toBeDefined();
   });
 
