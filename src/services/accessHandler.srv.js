@@ -33,12 +33,27 @@
      * @public
      *
      * @description
+     * Check if any permits are included in `data.permits`of `uxsPermitHandler`
+     *
+     * @returns {boolean} Any permit is set
+     */
+    this.hasPermits = function hasPermits() {
+      var permits = uxsPermitHandler.getPermits();
+
+      return permits.length > 0;
+    };
+
+    /**
+     * @function
+     * @public
+     *
+     * @description
      * Check if all passed permits are included in `data.permits` of `uxsPermitHandler`
      *
      * @param {(Array.<?string> | string)} permits Permits to be searched for
      * @returns {boolean} All passed permits are set
      */
-    this.hasPermits = function hasPermits(permits) {
+    this.hasAllPermits = function hasAllPermits(permits) {
       var parsedPermits = uxsPermitHandler.parsePermits(permits);
 
       return parsedPermits.every(_inspectPermits);
@@ -89,8 +104,15 @@
       var isVerified = uxsAuthTypeHandler.isAuthType(authType);
       var parsedAuthType = uxsAuthTypeHandler.parseAuthType(authType);
       var permitInspector = uxsAUTH_TYPES[parsedAuthType];
+      var result;
 
-      return isVerified && this[permitInspector](permits);
+      if(permits === '*') {
+        result = this.hasPermits();
+      } else {
+        result = isVerified && this[permitInspector](permits);
+      }
+
+      return result;
     };
 
     /**

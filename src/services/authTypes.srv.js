@@ -11,7 +11,7 @@
 
   angular.module('uxs').constant('uxsAUTH_TYPES', {
     'any': 'hasAnyPermits',
-    'all': 'hasPermits',
+    'all': 'hasAllPermits',
     'none': 'hasNonePermits'
   });
 
