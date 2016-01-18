@@ -13,6 +13,7 @@
     'uxsAUTH_TYPES',
     'uxsAuthTypeHandler',
     'uxsPermitHandler',
+    'uxsWildcardHandler',
     UxsAccessHandler
   ]);
 
@@ -26,8 +27,9 @@
    * @param {Object.<string, string>} uxsAUTH_TYPES Available auth types (DI)
    * @param {Object.<string, Function>} uxsAuthTypeHandler Factory to handle auth types (DI)
    * @param {Object.<string, Function>} uxsPermitHandler Factory to handle permits (DI)
+   * @param {Object.<string, Function>} uxsWildcardHandler Factory to handle wildcard (DI)
    */
-  function UxsAccessHandler(uxsAUTH_TYPES, uxsAuthTypeHandler, uxsPermitHandler) {
+  function UxsAccessHandler(uxsAUTH_TYPES, uxsAuthTypeHandler, uxsPermitHandler, uxsWildcardHandler) {
     /**
      * @function
      * @public
@@ -104,9 +106,10 @@
       var isVerified = uxsAuthTypeHandler.isAuthType(authType);
       var parsedAuthType = uxsAuthTypeHandler.parseAuthType(authType);
       var permitInspector = uxsAUTH_TYPES[parsedAuthType];
+      var wildcard = uxsWildcardHandler.getWildcard();
       var result;
 
-      if(permits === '*') {
+      if(permits === wildcard) {
         result = this.hasPermits();
       } else {
         result = isVerified && this[permitInspector](permits);
