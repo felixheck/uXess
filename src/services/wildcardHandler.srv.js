@@ -70,7 +70,8 @@
        * Store private variables in a centrally manner
        */
       var _data = {
-        wildcard: '*'
+        wildcard: '*',
+        defaultWildcard: '*'
       };
 
       /**
@@ -90,7 +91,7 @@
         try {
           parsedWildcard = wildcard.toString();
         } catch(error) {
-          parsedWildcard = '*';
+          parsedWildcard = _data.defaultWildcard;
         }
 
         return parsedWildcard;
