@@ -1,6 +1,6 @@
 /*!
  * @author Felix Heck <hi@whoTheHeck.de>
- * @version 0.0.1
+ * @version 0.1.0
  * @copyright Felix Heck 2016
  * @license MIT
  */
@@ -17,7 +17,7 @@
 
 /*!
  * @author Felix Heck <hi@whoTheHeck.de>
- * @version 0.0.1
+ * @version 0.1.0
  * @copyright Felix Heck 2016
  * @license MIT
  */
@@ -154,7 +154,7 @@
 
 /*!
  * @author Felix Heck <hi@whoTheHeck.de>
- * @version 0.0.1
+ * @version 0.1.0
  * @copyright Felix Heck 2016
  * @license MIT
  */
@@ -323,7 +323,7 @@
 
 /*!
  * @author Felix Heck <hi@whoTheHeck.de>
- * @version 0.0.1
+ * @version 0.1.0
  * @copyright Felix Heck 2016
  * @license MIT
  */
@@ -342,7 +342,7 @@
 
 /*!
  * @author Felix Heck <hi@whoTheHeck.de>
- * @version 0.0.1
+ * @version 0.1.0
  * @copyright Felix Heck 2016
  * @license MIT
  */
@@ -519,7 +519,7 @@
 
 /*!
  * @author Felix Heck <hi@whoTheHeck.de>
- * @version 0.0.1
+ * @version 0.1.0
  * @copyright Felix Heck 2016
  * @license MIT
  */
@@ -589,7 +589,8 @@
        * Store private variables in a centrally manner
        */
       var _data = {
-        wildcard: '*'
+        wildcard: null,
+        defaultWildcard: '*'
       };
 
       /**
@@ -609,7 +610,7 @@
         try {
           parsedWildcard = wildcard.toString();
         } catch(error) {
-          parsedWildcard = '*';
+          parsedWildcard = _data.defaultWildcard;
         }
 
         return parsedWildcard;
@@ -626,7 +627,7 @@
        * @returns {Array.<?string>} `_data.permits`
        */
       service.getWildcard = function getWildcard() {
-        return _data.wildcard;
+        return _data.wildcard || _data.defaultWildcard;
       };
 
       /**
@@ -666,7 +667,7 @@
 
 /*!
  * @author Felix Heck <hi@whoTheHeck.de>
- * @version 0.0.1
+ * @version 0.1.0
  * @copyright Felix Heck 2016
  * @license MIT
  */

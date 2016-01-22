@@ -70,7 +70,7 @@
        * Store private variables in a centrally manner
        */
       var _data = {
-        wildcard: '*',
+        wildcard: null,
         defaultWildcard: '*'
       };
 
@@ -108,7 +108,7 @@
        * @returns {Array.<?string>} `_data.permits`
        */
       service.getWildcard = function getWildcard() {
-        return _data.wildcard;
+        return _data.wildcard || _data.defaultWildcard;
       };
 
       /**
