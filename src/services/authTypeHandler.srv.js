@@ -138,13 +138,13 @@
        * @returns {string} Parsed auth type
        */
       service.parseAuthType = function parseAuthType(authType) {
-        var parsedAuthType = _data.defaultAuthType;
+        var parsedAuthType;
 
         if (angular.isString(authType)) {
           parsedAuthType = angular.lowercase(authType).trim();
         }
 
-        return parsedAuthType;
+        return parsedAuthType || _data.defaultAuthType;
       };
 
       /**

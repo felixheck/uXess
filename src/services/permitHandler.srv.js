@@ -86,14 +86,19 @@
        * @returns {Array.<?string>} List of permits
        */
       service.parsePermits = function parsePermits(permits) {
-        var parsedPermits = [];
+        var parsedPermits;
+        var splitPermits;
 
         if (permits && angular.isString(permits)) {
-          permits = permits.split(',');
+          splitPermits = permits.split(',');
+        } else {
+          splitPermits = permits;
         }
 
-        if (permits && angular.isArray(permits)) {
-          parsedPermits = _parsePermitList(permits);
+        if (splitPermits && angular.isArray(splitPermits) ) {
+          parsedPermits = _parsePermitList(splitPermits);
+        } else {
+          parsedPermits = [];
         }
 
         return parsedPermits;
@@ -143,14 +148,17 @@
        */
       function _parsePermitList(permits) {
         return permits.map(function (permit) {
+          var trimmedPermits;
+          var parsedPermits;
+
           try {
-            permit = permit.toString();
-            permit = angular.lowercase(permit).trim();
+            trimmedPermits = permit.toString().trim();
+            parsedPermits = angular.lowercase(trimmedPermits);
           } catch(error) {
-            permit = '';
+            parsedPermits = '';
           }
 
-          return permit;
+          return parsedPermits;
         });
       }
 

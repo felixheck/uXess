@@ -58,7 +58,7 @@
     this.hasAllPermits = function hasAllPermits(permits) {
       var parsedPermits = uxsPermitHandler.parsePermits(permits);
 
-      return parsedPermits.every(_inspectPermits);
+      return parsedPermits.every(_comparePermits);
     };
 
     /**
@@ -74,7 +74,7 @@
     this.hasAnyPermits = function hasAnyPermits(permits) {
       var parsedPermits = uxsPermitHandler.parsePermits(permits);
 
-      return parsedPermits.some(_inspectPermits);
+      return parsedPermits.some(_comparePermits);
     };
 
     /**
@@ -128,7 +128,7 @@
      * @param {string} element Element to be searched for
      * @returns {boolean} Element is included
      */
-    function _inspectPermits(element) {
+    function _comparePermits(element) {
       return uxsPermitHandler.getPermits().indexOf(element) !== -1;
     }
   }
