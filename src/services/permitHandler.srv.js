@@ -178,7 +178,7 @@
       _parseProvidedPermits();
 
       return service;
-    }
+    };
   }
 
 })();

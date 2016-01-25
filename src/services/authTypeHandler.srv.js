@@ -123,7 +123,7 @@
         var parsedAuthType = this.parseAuthType(authType);
         var authTypeKeys = Object.keys(uxsAUTH_TYPES);
 
-        return authTypeKeys.indexOf(parsedAuthType) !== -1
+        return authTypeKeys.indexOf(parsedAuthType) !== -1;
       };
 
       /**
@@ -163,6 +163,6 @@
       _parseProvidedDefaultAuthType();
 
       return service;
-    }
+    };
   }
 })();
