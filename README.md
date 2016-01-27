@@ -9,6 +9,7 @@
 1. [Development](#development)
 1. [Contribution](#contribution)
 1. [Changelog](#changelog)
+1. [License](#license)
 
 ## Introduction
 The only dependencies are [AngularJS](https://github.com/angular/angular.js/) and the animation module **ngAnimate**.
