@@ -118,7 +118,7 @@
        *
        * @description
        * Set `_data.wildcard`
-       **
+       *
        * @param {string} wildcard Wildcard to be set
        */
       service.setWildcard = function setWildcard(wildcard) {

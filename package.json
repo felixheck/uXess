@@ -34,7 +34,7 @@
     "test:unit": "karma start ./config/karma.conf.js",
     "test:e2e": "npm run protractor --force",
     "build": "node config/buildify.conf.js dist:build",
-    "watch:dist": "gacher -p 'src/**/*.js' -c 'npm run build:dist'",
+    "watch:dist": "gacher -p 'src/**/*.js' -c 'npm run build'",
     "selenium": "webdriver-manager start",
     "http": "http-server ./ -p 8080 -o sample",
     "protractor": "protractor config/protractor.conf.js"
