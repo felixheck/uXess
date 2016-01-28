@@ -40,7 +40,7 @@
       port: 9876,
       colors: true,
       logLevel: config.LOG_INFO,
-      browsers: ['Chrome'],
+      browsers: ['Chrome', 'Firefox'],
       autoWatch: true,
       singleRun: false
     });
