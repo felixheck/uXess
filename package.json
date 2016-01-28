@@ -7,9 +7,12 @@
     "generic",
     "authorization",
     "role",
-    "ui",
     "access",
-    "ngAnimate"
+    "ngAnimate",
+    "user interface",
+    "user experience",
+    "ui",
+    "ux"
   ],
   "author": {
     "name": "Felix Heck",
