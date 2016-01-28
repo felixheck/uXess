@@ -3,7 +3,7 @@
 ---
 
 1. [Introduction](#introduction)
-1. [Install](#install)
+1. [Installation](#installation)
 1. [Usage](#usage)
 1. [Minimal Working Example](#minimal-working-example)
 1. [Development](#development)
@@ -16,7 +16,7 @@ The only dependencies are [AngularJS](https://github.com/angular/angular.js/) an
 
 Tested against v1.4.7 but other versions should work.
 
-## Install
+## Installation
 For installation use the [Node Package Manager](https://github.com/npm/npm):
 ```
 $ npm install --save uxess
@@ -317,12 +317,18 @@ Make use of the wildcard symbol, to check if user has any role:
 ## Minimal Working Example
 To run a demo or rather a minimal working example, use:
 ```
+$ npm install
 $ npm run sample
 ```
 
 It is possible to set the permits by checking the checkboxes.
 
 ## Development
+First you have to install all dependencies:
+```
+$ npm install
+```
+
 ### Testing
 To execute all unit tests, use:
 ```
