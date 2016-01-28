@@ -35,13 +35,12 @@
         'karma-mocha-reporter',
         'karma-coverage',
         'karma-firefox-launcher',
-        'karma-chrome-launcher',
-        'karma-phantomjs-launcher'
+        'karma-chrome-launcher'
       ],
       port: 9876,
       colors: true,
       logLevel: config.LOG_INFO,
-      browsers: ['Firefox', 'Chrome'],
+      browsers: ['Chrome'],
       autoWatch: true,
       singleRun: false
     });
