@@ -1,0 +1,460 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Uxess by felixheck</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-light.css">
+    <meta name="viewport" content="width=device-width">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Uxess</h1>
+        <p>Generic authorization module for role-based handling of ui elements</p>
+
+        <p class="view"><a href="https://github.com/felixheck/uXess">View the Project on GitHub <small>felixheck/uXess</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/felixheck/uXess/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/felixheck/uXess/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/felixheck/uXess">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a id="uxess" class="anchor" href="#uxess" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>uXess</h1>
+
+<h3>
+<a id="generic-authorization-module-for-role-based-handling-of-ui-elements" class="anchor" href="#generic-authorization-module-for-role-based-handling-of-ui-elements" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Generic authorization module for role-based handling of ui elements</h3>
+
+<hr>
+
+<ol>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#installation">Installation</a></li>
+<li><a href="#usage">Usage</a></li>
+<li><a href="#minimal-working-example">Minimal Working Example</a></li>
+<li><a href="#development">Development</a></li>
+<li><a href="#contribution">Contribution</a></li>
+<li><a href="#changelog">Changelog</a></li>
+<li><a href="#license">License</a></li>
+</ol>
+
+<h2>
+<a id="introduction" class="anchor" href="#introduction" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Introduction</h2>
+
+<p>The only dependencies are <a href="https://github.com/angular/angular.js/">AngularJS</a> and the animation module <strong>ngAnimate</strong>.</p>
+
+<p>Tested against v1.4.7 but other versions should work.</p>
+
+<h2>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Installation</h2>
+
+<p>For installation use the <a href="https://github.com/npm/npm">Node Package Manager</a>:</p>
+
+<pre><code>$ npm install --save uxess
+</code></pre>
+
+<p>or clone the repository:</p>
+
+<pre><code>$ git clone https://github.com/felixheck/uXess
+</code></pre>
+
+<h2>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Usage</h2>
+
+<h3>
+<a id="integration" class="anchor" href="#integration" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Integration</h3>
+
+<p>Include <strong>uXess</strong> and <strong>ngAnimate</strong> into your application:</p>
+
+<div class="highlight highlight-text-html-basic"><pre>&lt;!DOCTYPE html&gt;
+&lt;<span class="pl-ent">html</span> <span class="pl-e">ng-app</span>=<span class="pl-s"><span class="pl-pds">"</span>yourApp<span class="pl-pds">"</span></span>&gt;
+&lt;<span class="pl-ent">head</span>&gt;
+    ...
+&lt;/<span class="pl-ent">head</span>&gt;
+&lt;<span class="pl-ent">body</span>&gt;
+    ...
+
+<span class="pl-s1">    &lt;<span class="pl-ent">script</span> <span class="pl-e">src</span>=<span class="pl-s"><span class="pl-pds">"</span>../uxess.min.js<span class="pl-pds">"</span></span>&gt;&lt;/<span class="pl-ent">script</span>&gt;</span>
+<span class="pl-s1">    &lt;<span class="pl-ent">script</span> <span class="pl-e">src</span>=<span class="pl-s"><span class="pl-pds">"</span>../angular-animate.min.js<span class="pl-pds">"</span></span>&gt;&lt;/<span class="pl-ent">script</span>&gt;</span>
+&lt;/<span class="pl-ent">body</span>&gt;
+&lt;/<span class="pl-ent">html</span>&gt;</pre></div>
+
+<p>Declare a dependency on the <strong>uXess</strong> module:</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-smi">angular</span>.<span class="pl-en">module</span>(<span class="pl-s"><span class="pl-pds">'</span>yourApp<span class="pl-pds">'</span></span>, [
+    <span class="pl-s"><span class="pl-pds">'</span>uxs<span class="pl-pds">'</span></span>
+]);</pre></div>
+
+<h3>
+<a id="set-a-new-wildcard-symbol" class="anchor" href="#set-a-new-wildcard-symbol" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Set a new wildcard symbol</h3>
+
+<p>In the <code>config</code> block:</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-smi">angular</span>.<span class="pl-en">module</span>(<span class="pl-s"><span class="pl-pds">'</span>sampleApp<span class="pl-pds">'</span></span>)
+    .<span class="pl-en">config</span>(<span class="pl-k">function</span>(<span class="pl-smi">uxsWildcardHandlerProvider</span>) {
+        <span class="pl-smi">uxsWildcardHandlerProvider</span>.<span class="pl-en">setWildcard</span>(<span class="pl-s"><span class="pl-pds">'</span>?<span class="pl-pds">'</span></span>);
+    });</pre></div>
+
+<p>After initialisation, for example in a controller:</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-smi">angular</span>.<span class="pl-en">module</span>(<span class="pl-s"><span class="pl-pds">'</span>yourApp<span class="pl-pds">'</span></span>).<span class="pl-en">controller</span>(<span class="pl-s"><span class="pl-pds">'</span>FooCtrl<span class="pl-pds">'</span></span>, <span class="pl-k">function</span>(<span class="pl-smi">uxsWildcardHandler</span>) {
+    <span class="pl-v">this</span>.<span class="pl-smi">init</span> <span class="pl-k">=</span> <span class="pl-k">function</span>() {
+        <span class="pl-smi">uxsWildcardHandler</span>.<span class="pl-en">setWildcard</span>(<span class="pl-s"><span class="pl-pds">'</span>?<span class="pl-pds">'</span></span>);
+    };
+});</pre></div>
+
+<h3>
+<a id="set-default-authorization-type" class="anchor" href="#set-default-authorization-type" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Set default authorization type</h3>
+
+<p>In the <code>config</code> block:</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-smi">angular</span>.<span class="pl-en">module</span>(<span class="pl-s"><span class="pl-pds">'</span>sampleApp<span class="pl-pds">'</span></span>)
+    .<span class="pl-en">config</span>(<span class="pl-k">function</span>(<span class="pl-smi">uxsAuthTypeHandlerProvider</span>) {
+        <span class="pl-smi">uxsAuthTypeHandlerProvider</span>.<span class="pl-en">setDefaultAuthType</span>(<span class="pl-s"><span class="pl-pds">'</span>all<span class="pl-pds">'</span></span>);
+    });</pre></div>
+
+<p>After initialisation, for example in a controller:</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-smi">angular</span>.<span class="pl-en">module</span>(<span class="pl-s"><span class="pl-pds">'</span>yourApp<span class="pl-pds">'</span></span>).<span class="pl-en">controller</span>(<span class="pl-s"><span class="pl-pds">'</span>FooCtrl<span class="pl-pds">'</span></span>, <span class="pl-k">function</span>(<span class="pl-smi">uxsAuthTypeHandler</span>) {
+    <span class="pl-v">this</span>.<span class="pl-smi">init</span> <span class="pl-k">=</span> <span class="pl-k">function</span>() {
+        <span class="pl-smi">uxsAuthTypeHandler</span>.<span class="pl-en">setDefaultAuthType</span>(<span class="pl-s"><span class="pl-pds">'</span>all<span class="pl-pds">'</span></span>);
+    };
+});</pre></div>
+
+<h3>
+<a id="set-permits" class="anchor" href="#set-permits" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Set permits</h3>
+
+<p>Before AngularJS bootstrapping:</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-smi">angular</span>.<span class="pl-en">element</span>(<span class="pl-c1">document</span>).<span class="pl-en">ready</span>(<span class="pl-k">function</span>() {
+    <span class="pl-smi">$</span>.<span class="pl-en">get</span>(<span class="pl-s"><span class="pl-pds">'</span>api/v1/user<span class="pl-pds">'</span></span>, <span class="pl-k">function</span>(<span class="pl-smi">res</span>) {
+        <span class="pl-smi">angular</span>.<span class="pl-en">module</span>(<span class="pl-s"><span class="pl-pds">'</span>yourApp<span class="pl-pds">'</span></span>).<span class="pl-en">config</span>(<span class="pl-k">function</span>(<span class="pl-smi">uxsPermitHandlerProvider</span>) {
+            <span class="pl-smi">uxsPermitHandlerProvider</span>.<span class="pl-en">setPermits</span>(<span class="pl-smi">res</span>.<span class="pl-smi">permits</span>);
+        });
+
+        <span class="pl-smi">angular</span>.<span class="pl-en">bootstrap</span>(<span class="pl-c1">document</span>, [<span class="pl-s"><span class="pl-pds">'</span>yourApp<span class="pl-pds">'</span></span>]);
+  });
+});
+</pre></div>
+
+<p>In the <code>run</code> block:</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-smi">angular</span>.<span class="pl-en">module</span>(<span class="pl-s"><span class="pl-pds">'</span>yourApp<span class="pl-pds">'</span></span>)
+    .<span class="pl-en">run</span>(<span class="pl-k">function</span>(<span class="pl-smi">$http</span>, <span class="pl-smi">uxsPermitHandler</span>) {
+        <span class="pl-smi">$http</span>.<span class="pl-en">get</span>(<span class="pl-s"><span class="pl-pds">'</span>/api/v1/user<span class="pl-pds">'</span></span>).<span class="pl-en">then</span>(<span class="pl-k">function</span>(<span class="pl-smi">res</span>) {
+        <span class="pl-smi">uxsPermitHandler</span>.<span class="pl-en">setPermits</span>(<span class="pl-smi">res</span>.<span class="pl-smi">permits</span>);
+      });
+    });</pre></div>
+
+<p>After initialisation, for example in a controller:</p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-smi">angular</span>.<span class="pl-en">module</span>(<span class="pl-s"><span class="pl-pds">'</span>yourApp<span class="pl-pds">'</span></span>).<span class="pl-en">controller</span>(<span class="pl-s"><span class="pl-pds">'</span>FooCtrl<span class="pl-pds">'</span></span>, <span class="pl-k">function</span>(<span class="pl-smi">uxsPermitHandler</span>) {
+    <span class="pl-v">this</span>.<span class="pl-smi">init</span> <span class="pl-k">=</span> <span class="pl-k">function</span>() {
+        <span class="pl-smi">uxsPermitHandler</span>.<span class="pl-en">setPermits</span>(<span class="pl-s"><span class="pl-pds">'</span>admin<span class="pl-pds">'</span></span>);
+    };
+});</pre></div>
+
+<h3>
+<a id="directives" class="anchor" href="#directives" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Directives</h3>
+
+<p>Make use of static permit and the default authorization type:</p>
+
+<div class="highlight highlight-text-html-basic"><pre>&lt;<span class="pl-ent">button</span> <span class="pl-e">uxs-if</span>=<span class="pl-s"><span class="pl-pds">"</span>admin<span class="pl-pds">"</span></span>&gt;&lt;/<span class="pl-ent">button</span>&gt;</pre></div>
+
+<p>Make use of static permits and the <strong>none</strong> authorization type:</p>
+
+<div class="highlight highlight-text-html-basic"><pre>&lt;<span class="pl-ent">button</span> <span class="pl-e">uxs-if</span>=<span class="pl-s"><span class="pl-pds">"</span>admin, user<span class="pl-pds">"</span></span> <span class="pl-e">uxs-type</span>=<span class="pl-s"><span class="pl-pds">"</span>none<span class="pl-pds">"</span></span>&gt;&lt;/<span class="pl-ent">button</span>&gt;</pre></div>
+
+<p>Make use of the scope and the <strong>all</strong> authorization type:</p>
+
+<div class="highlight highlight-text-html-basic"><pre>&lt;<span class="pl-ent">button</span> <span class="pl-e">uxs-if</span>=<span class="pl-s"><span class="pl-pds">"</span>FooCtrl.permits<span class="pl-pds">"</span></span> <span class="pl-e">uxs-type</span>=<span class="pl-s"><span class="pl-pds">"</span>all<span class="pl-pds">"</span></span>&gt;&lt;/<span class="pl-ent">button</span>&gt;</pre></div>
+
+<p>Make use of an expression and the <strong>any</strong> authorization type:</p>
+
+<div class="highlight highlight-text-html-basic"><pre>&lt;<span class="pl-ent">button</span> <span class="pl-e">uxs-if</span>=<span class="pl-s"><span class="pl-pds">"</span>{{ FooCtrl.permits }}<span class="pl-pds">"</span></span> <span class="pl-e">uxs-type</span>=<span class="pl-s"><span class="pl-pds">"</span>any<span class="pl-pds">"</span></span>&gt;&lt;/<span class="pl-ent">button</span>&gt;</pre></div>
+
+<p>Make use of the wildcard symbol, to check if user has any role:</p>
+
+<div class="highlight highlight-text-html-basic"><pre>&lt;<span class="pl-ent">button</span> <span class="pl-e">uxs-if</span>=<span class="pl-s"><span class="pl-pds">"</span>*<span class="pl-pds">"</span></span>&gt;&lt;/<span class="pl-ent">button</span>&gt;</pre></div>
+
+<h2>
+<a id="public-api" class="anchor" href="#public-api" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Public API</h2>
+
+<h3>
+<a id="uxsaccesshandler" class="anchor" href="#uxsaccesshandler" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>uxsAccessHandler</h3>
+
+<h4>
+<a id="uxsaccesshandlerispermitted" class="anchor" href="#uxsaccesshandlerispermitted" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>uxsAccessHandler.isPermitted</h4>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-c">/**</span>
+<span class="pl-c"> * <span class="pl-k">@description</span></span>
+<span class="pl-c"> * Check if UI element is accessible for user</span>
+<span class="pl-c"> *</span>
+<span class="pl-c"> * <span class="pl-k">@param</span> {(Array.&lt;?string&gt; | string)} permits Permits to be searched for</span>
+<span class="pl-c"> * <span class="pl-k">@param</span> {string} authType Required auth type</span>
+<span class="pl-c"> * <span class="pl-k">@returns</span> {boolean} UI element is accessible</span>
+<span class="pl-c"> */</span></pre></div>
+
+<h4>
+<a id="uxsaccesshandlerhaspermits" class="anchor" href="#uxsaccesshandlerhaspermits" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>uxsAccessHandler.hasPermits</h4>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-c">/**</span>
+<span class="pl-c"> * <span class="pl-k">@description</span></span>
+<span class="pl-c"> * Check if any permits are included in `data.permits`of `uxsPermitHandler`</span>
+<span class="pl-c"> *</span>
+<span class="pl-c"> * <span class="pl-k">@returns</span> {boolean} Any permit is set</span>
+<span class="pl-c"> */</span></pre></div>
+
+<h4>
+<a id="uxsaccesshandlerhasallpermits" class="anchor" href="#uxsaccesshandlerhasallpermits" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>uxsAccessHandler.hasAllPermits</h4>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-c">/**</span>
+<span class="pl-c"> * <span class="pl-k">@description</span></span>
+<span class="pl-c"> * Check if all passed permits are included in `data.permits` of `uxsPermitHandler`</span>
+<span class="pl-c"> *</span>
+<span class="pl-c"> * <span class="pl-k">@param</span> {(Array.&lt;?string&gt; | string)} permits Permits to be searched for</span>
+<span class="pl-c"> * <span class="pl-k">@returns</span> {boolean} All passed permits are set</span>
+<span class="pl-c"> */</span></pre></div>
+
+<h4>
+<a id="uxsaccesshandlerhasanypermits" class="anchor" href="#uxsaccesshandlerhasanypermits" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>uxsAccessHandler.hasAnyPermits</h4>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-c">/**</span>
+<span class="pl-c"> * <span class="pl-k">@description</span></span>
+<span class="pl-c"> * Check if any of passed permits is included in `data.permits` of `uxsPermitHandler`</span>
+<span class="pl-c"> *</span>
+<span class="pl-c"> * <span class="pl-k">@param</span> {(Array.&lt;?string&gt; | string)} permits Permits to be searched for</span>
+<span class="pl-c"> * <span class="pl-k">@returns</span> {boolean} Any of passed permits is set</span>
+<span class="pl-c"> */</span></pre></div>
+
+<h4>
+<a id="uxsaccesshandlerhasnonepermits" class="anchor" href="#uxsaccesshandlerhasnonepermits" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>uxsAccessHandler.hasNonePermits</h4>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-c">/**</span>
+<span class="pl-c"> * <span class="pl-k">@description</span></span>
+<span class="pl-c"> * Check if none of passed permits is included in `data.permits` of `uxsPermitHandler`</span>
+<span class="pl-c"> *</span>
+<span class="pl-c"> * <span class="pl-k">@param</span> {(Array.&lt;?string&gt; | string)} permits Permits to be searched for</span>
+<span class="pl-c"> * <span class="pl-k">@returns</span> {boolean} None of passed permits is set</span>
+<span class="pl-c"> */</span></pre></div>
+
+<h3>
+<a id="uxsauthtypehandler" class="anchor" href="#uxsauthtypehandler" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>uxsAuthTypeHandler</h3>
+
+<h4>
+<a id="uxsauthtypehandlersetdefaultauthtype" class="anchor" href="#uxsauthtypehandlersetdefaultauthtype" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>uxsAuthTypeHandler.setDefaultAuthType</h4>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-c">/**</span>
+<span class="pl-c"> * <span class="pl-k">@description</span></span>
+<span class="pl-c"> * Set `_data.defaultAuthType`</span>
+<span class="pl-c"> *</span>
+<span class="pl-c"> * <span class="pl-k">@param</span> {string} authType Auth type to be set</span>
+<span class="pl-c"> */</span></pre></div>
+
+<h4>
+<a id="uxsauthtypehandlergetdefaultauthtype" class="anchor" href="#uxsauthtypehandlergetdefaultauthtype" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>uxsAuthTypeHandler.getDefaultAuthType</h4>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-c">/**</span>
+<span class="pl-c"> * <span class="pl-k">@description</span></span>
+<span class="pl-c"> * Set `_data.defaultAuthType`</span>
+<span class="pl-c"> *</span>
+<span class="pl-c"> * <span class="pl-k">@returns</span> {string} `_data.defaultAuthType`</span>
+<span class="pl-c"> */</span></pre></div>
+
+<h4>
+<a id="uxsauthtypehandlerisauthtype" class="anchor" href="#uxsauthtypehandlerisauthtype" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>uxsAuthTypeHandler.isAuthType</h4>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-c">/**</span>
+<span class="pl-c"> * <span class="pl-k">@description</span></span>
+<span class="pl-c"> * Check if passed auth type is valid</span>
+<span class="pl-c"> *</span>
+<span class="pl-c"> * <span class="pl-k">@param</span> {string} authType Auth type to be checked</span>
+<span class="pl-c"> * <span class="pl-k">@returns</span> {boolean} Auth type is valid</span>
+<span class="pl-c"> */</span></pre></div>
+
+<h4>
+<a id="uxsauthtypehandlerparseauthtype" class="anchor" href="#uxsauthtypehandlerparseauthtype" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>uxsAuthTypeHandler.parseAuthType</h4>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-c">/**</span>
+<span class="pl-c"> * <span class="pl-k">@description</span></span>
+<span class="pl-c"> * Parse passed auth type</span>
+<span class="pl-c"> *</span>
+<span class="pl-c"> * <span class="pl-k">@param</span> {string} authType Auth type to be parsed</span>
+<span class="pl-c"> * <span class="pl-k">@returns</span> {string} Parsed auth type</span>
+<span class="pl-c"> */</span></pre></div>
+
+<h3>
+<a id="uxspermithandler" class="anchor" href="#uxspermithandler" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>uxsPermitHandler</h3>
+
+<h4>
+<a id="uxspermithandlersetpermits" class="anchor" href="#uxspermithandlersetpermits" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>uxsPermitHandler.setPermits</h4>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-c">/**</span>
+<span class="pl-c"> * <span class="pl-k">@description</span></span>
+<span class="pl-c"> * Set `_data.permits`</span>
+<span class="pl-c"> *</span>
+<span class="pl-c"> * <span class="pl-k">@fires</span> `uxsPermitsChanged`</span>
+<span class="pl-c"> *</span>
+<span class="pl-c"> * <span class="pl-k">@param</span> {(Array.&lt;?string&gt; | string)} permits Permits to be set</span>
+<span class="pl-c"> */</span></pre></div>
+
+<h4>
+<a id="uxspermithandlergetpermits" class="anchor" href="#uxspermithandlergetpermits" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>uxsPermitHandler.getPermits</h4>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-c">/**</span>
+<span class="pl-c"> * <span class="pl-k">@description</span></span>
+<span class="pl-c"> * Get `_data.permits`</span>
+<span class="pl-c"> *</span>
+<span class="pl-c"> * <span class="pl-k">@returns</span> {Array.&lt;?string&gt;} `_data.permits`</span>
+<span class="pl-c"> */</span></pre></div>
+
+<h4>
+<a id="uxspermithandlerparsepermits" class="anchor" href="#uxspermithandlerparsepermits" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>uxsPermitHandler.parsePermits</h4>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-c">/**</span>
+<span class="pl-c"> * <span class="pl-k">@description</span></span>
+<span class="pl-c"> * Parse permits to list of trimmed and transformed ones</span>
+<span class="pl-c"> *</span>
+<span class="pl-c"> * <span class="pl-k">@param</span> {(Array.&lt;?string&gt; | string)} permits Permits to be parsed</span>
+<span class="pl-c"> * <span class="pl-k">@returns</span> {Array.&lt;?string&gt;} List of permits</span>
+<span class="pl-c"> */</span></pre></div>
+
+<h3>
+<a id="uxswildcardhandler" class="anchor" href="#uxswildcardhandler" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>uxsWildcardHandler</h3>
+
+<h4>
+<a id="uxswildcardhandlersetwildcard" class="anchor" href="#uxswildcardhandlersetwildcard" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>uxsWildcardHandler.setWildcard</h4>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-c">/**</span>
+<span class="pl-c"> * <span class="pl-k">@description</span></span>
+<span class="pl-c"> * Set `_data.wildcard`</span>
+<span class="pl-c"> *</span>
+<span class="pl-c"> * <span class="pl-k">@param</span> {string} wildcard Wildcard to be set</span>
+<span class="pl-c"> */</span></pre></div>
+
+<h4>
+<a id="uxswildcardhandlergetwildcard" class="anchor" href="#uxswildcardhandlergetwildcard" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>uxsWildcardHandler.getWildcard</h4>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-c">/**</span>
+<span class="pl-c"> * <span class="pl-k">@description</span></span>
+<span class="pl-c"> * Get `_data.wildcard`</span>
+<span class="pl-c"> *</span>
+<span class="pl-c"> * <span class="pl-k">@returns</span> {Array.&lt;?string&gt;} `_data.permits`</span>
+<span class="pl-c"> */</span></pre></div>
+
+<h4>
+<a id="uxswildcardhandlerparsewildcard" class="anchor" href="#uxswildcardhandlerparsewildcard" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>uxsWildcardHandler.parseWildcard</h4>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-c">/**</span>
+<span class="pl-c"> * <span class="pl-k">@description</span></span>
+<span class="pl-c"> * Parse wildcard to string</span>
+<span class="pl-c"> *</span>
+<span class="pl-c"> * <span class="pl-k">@param</span> {string} wildcard Wildcard to be parsed</span>
+<span class="pl-c"> * <span class="pl-k">@returns</span> {string} Parsed wildcard</span>
+<span class="pl-c"> */</span></pre></div>
+
+<h2>
+<a id="minimal-working-example" class="anchor" href="#minimal-working-example" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Minimal Working Example</h2>
+
+<p>To run a demo or rather a minimal working example, use:</p>
+
+<pre><code>$ npm install
+$ npm run sample
+</code></pre>
+
+<p>It is possible to set the permits by checking the checkboxes.</p>
+
+<h2>
+<a id="development" class="anchor" href="#development" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Development</h2>
+
+<p>First you have to install all dependencies:</p>
+
+<pre><code>$ npm install
+</code></pre>
+
+<h3>
+<a id="testing" class="anchor" href="#testing" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Testing</h3>
+
+<p>To execute all unit tests, use:</p>
+
+<pre><code>$ npm test
+</code></pre>
+
+<p>To execute end-to-end tests, use:</p>
+
+<pre><code>$ npm run http
+$ npm run selenium
+$ npm run test:e2e
+</code></pre>
+
+<p>To open the coverage information of the unit tests, use:</p>
+
+<pre><code>$ npm run coverage
+</code></pre>
+
+<h3>
+<a id="distributing" class="anchor" href="#distributing" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Distributing</h3>
+
+<p>To build the distributional files, use:</p>
+
+<pre><code>$ npm run build
+</code></pre>
+
+<p>or make use of the file watcher:</p>
+
+<pre><code>$ npm start
+</code></pre>
+
+<h2>
+<a id="contribution" class="anchor" href="#contribution" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Contribution</h2>
+
+<p>Fork this repository and push in your ideas.</p>
+
+<p>Do not forget to add corresponding tests.</p>
+
+<h2>
+<a id="changelog" class="anchor" href="#changelog" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Changelog</h2>
+
+<h2>
+<a id="license" class="anchor" href="#license" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>License</h2>
+
+<p>The MIT License</p>
+
+<p>Copyright (c) 2016 Felix Heck</p>
+
+<p>Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:</p>
+
+<p>The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.</p>
+
+<p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.</p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/felixheck">felixheck</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
