@@ -55,7 +55,7 @@ angular.module('yourApp', [
 ### Set a new wildcard symbol
 In the `config` block:
 ``` js
-angular.module('sampleApp')
+angular.module('yourApp')
 	.config(function(uxsWildcardHandlerProvider) {
 		uxsWildcardHandlerProvider.setWildcard('?');
 	});
@@ -73,7 +73,7 @@ angular.module('yourApp').controller('FooCtrl', function(uxsWildcardHandler) {
 ### Set default authorization type
 In the `config` block:
 ``` js
-angular.module('sampleApp')
+angular.module('yourApp')
 	.config(function(uxsAuthTypeHandlerProvider) {
 		uxsAuthTypeHandlerProvider.setDefaultAuthType('all');
 	});
