@@ -1,6 +1,6 @@
 /*!
  * @author Felix Heck <hi@whoTheHeck.de>
- * @version 0.1.0
+ * @version 0.1.2
  * @copyright Felix Heck 2016
  * @license MIT
  */
@@ -17,7 +17,7 @@
 
 /*!
  * @author Felix Heck <hi@whoTheHeck.de>
- * @version 0.1.0
+ * @version 0.1.2
  * @copyright Felix Heck 2016
  * @license MIT
  */
@@ -75,7 +75,7 @@
     this.hasAllPermits = function hasAllPermits(permits) {
       var parsedPermits = uxsPermitHandler.parsePermits(permits);
 
-      return parsedPermits.every(_inspectPermits);
+      return parsedPermits.every(_comparePermits);
     };
 
     /**
@@ -91,7 +91,7 @@
     this.hasAnyPermits = function hasAnyPermits(permits) {
       var parsedPermits = uxsPermitHandler.parsePermits(permits);
 
-      return parsedPermits.some(_inspectPermits);
+      return parsedPermits.some(_comparePermits);
     };
 
     /**
@@ -145,7 +145,7 @@
      * @param {string} element Element to be searched for
      * @returns {boolean} Element is included
      */
-    function _inspectPermits(element) {
+    function _comparePermits(element) {
       return uxsPermitHandler.getPermits().indexOf(element) !== -1;
     }
   }
@@ -154,7 +154,7 @@
 
 /*!
  * @author Felix Heck <hi@whoTheHeck.de>
- * @version 0.1.0
+ * @version 0.1.2
  * @copyright Felix Heck 2016
  * @license MIT
  */
@@ -277,7 +277,7 @@
         var parsedAuthType = this.parseAuthType(authType);
         var authTypeKeys = Object.keys(uxsAUTH_TYPES);
 
-        return authTypeKeys.indexOf(parsedAuthType) !== -1
+        return authTypeKeys.indexOf(parsedAuthType) !== -1;
       };
 
       /**
@@ -292,13 +292,13 @@
        * @returns {string} Parsed auth type
        */
       service.parseAuthType = function parseAuthType(authType) {
-        var parsedAuthType = _data.defaultAuthType;
+        var parsedAuthType;
 
         if (angular.isString(authType)) {
           parsedAuthType = angular.lowercase(authType).trim();
         }
 
-        return parsedAuthType;
+        return parsedAuthType || _data.defaultAuthType;
       };
 
       /**
@@ -317,13 +317,13 @@
       _parseProvidedDefaultAuthType();
 
       return service;
-    }
+    };
   }
 })();
 
 /*!
  * @author Felix Heck <hi@whoTheHeck.de>
- * @version 0.1.0
+ * @version 0.1.2
  * @copyright Felix Heck 2016
  * @license MIT
  */
@@ -342,7 +342,7 @@
 
 /*!
  * @author Felix Heck <hi@whoTheHeck.de>
- * @version 0.1.0
+ * @version 0.1.2
  * @copyright Felix Heck 2016
  * @license MIT
  */
@@ -428,14 +428,19 @@
        * @returns {Array.<?string>} List of permits
        */
       service.parsePermits = function parsePermits(permits) {
-        var parsedPermits = [];
+        var parsedPermits;
+        var splitPermits;
 
         if (permits && angular.isString(permits)) {
-          permits = permits.split(',');
+          splitPermits = permits.split(',');
+        } else {
+          splitPermits = permits;
         }
 
-        if (permits && angular.isArray(permits)) {
-          parsedPermits = _parsePermitList(permits);
+        if (splitPermits && angular.isArray(splitPermits) ) {
+          parsedPermits = _parsePermitList(splitPermits);
+        } else {
+          parsedPermits = [];
         }
 
         return parsedPermits;
@@ -485,14 +490,17 @@
        */
       function _parsePermitList(permits) {
         return permits.map(function (permit) {
+          var trimmedPermits;
+          var parsedPermits;
+
           try {
-            permit = permit.toString();
-            permit = angular.lowercase(permit).trim();
+            trimmedPermits = permit.toString().trim();
+            parsedPermits = angular.lowercase(trimmedPermits);
           } catch(error) {
-            permit = '';
+            parsedPermits = '';
           }
 
-          return permit;
+          return parsedPermits;
         });
       }
 
@@ -512,14 +520,14 @@
       _parseProvidedPermits();
 
       return service;
-    }
+    };
   }
 
 })();
 
 /*!
  * @author Felix Heck <hi@whoTheHeck.de>
- * @version 0.1.0
+ * @version 0.1.2
  * @copyright Felix Heck 2016
  * @license MIT
  */
@@ -637,7 +645,7 @@
        *
        * @description
        * Set `_data.wildcard`
-       **
+       *
        * @param {string} wildcard Wildcard to be set
        */
       service.setWildcard = function setWildcard(wildcard) {
@@ -660,14 +668,14 @@
       _parseProvidedWildcard();
 
       return service;
-    }
+    };
   }
 
 })();
 
 /*!
  * @author Felix Heck <hi@whoTheHeck.de>
- * @version 0.1.0
+ * @version 0.1.2
  * @copyright Felix Heck 2016
  * @license MIT
  */
