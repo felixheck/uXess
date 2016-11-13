@@ -42,7 +42,7 @@
     "selenium": "webdriver-manager start",
     "http": "http-server ./ -p 8080 -o sample",
     "protractor": "protractor config/protractor.conf.js",
-    "postinstall": "webdriver-manager update --standalone"
+    "preselenium": "webdriver-manager update --standalone"
   },
   "devDependencies": {
     "angular-mocks": "^1.5.5",
