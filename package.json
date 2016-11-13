@@ -29,7 +29,7 @@
     "url": "https://github.com/felixheck/uXess/issues"
   },
   "license": "MIT",
-  "main": "./src/index.js",
+  "main": "./dist/index.js",
   "scripts": {
     "start": "npm run watch:dist",
     "test": "npm run test:unit",
